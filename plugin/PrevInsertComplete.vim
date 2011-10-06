@@ -7,6 +7,12 @@
 "			contents match the keyword before the cursor. First, a
 "			match at the beginning is tried; if that returns no
 "			results, it may match anywhere. 
+"									    *qa*
+" [count]qa		Recall and append previous [count]'th insertion. 
+"								      *q_CTRL-A*
+" [count]q<CTRL-A>	Lists the last 9 insertions, then prompts for a number.
+"			The chosen insertion is appended [count] times. 
+"
 " INSTALLATION:
 " DEPENDENCIES:
 "   - CompleteHelper.vim autoload script. 
@@ -144,6 +150,73 @@ augroup PrevInsertComplete
     autocmd!
     autocmd InsertLeave * call PrevInsertComplete#RecordInsertion()
 augroup END
+
+function! PrevInsertComplete#Recall( position, multiplier )
+    let l:insertion = get(s:insertions, (a:position - 1), '')
+    if empty(l:insertion)
+	if len(s:insertions) == 0
+	    let v:errmsg = 'No insertions yet'
+	else
+	    let v:errmsg = printf('There %s only %d insertion%s in the history',
+	    \   len(s:insertions) == 1 ? 'is' : 'are',
+	    \   len(s:insertions),
+	    \   len(s:insertions) == 1 ? '' : 's'
+	    \)
+	endif
+	echohl ErrorMsg
+	echomsg v:errmsg
+	echohl None
+
+	return
+    endif
+
+    " This doesn't work with special characters like <Esc>. 
+    "execute 'normal! a' . l:insertion . "\<Esc>"
+
+    let l:save_clipboard = &clipboard
+    set clipboard= " Avoid clobbering the selection and clipboard registers. 
+    let l:save_reg = getreg('"')
+    let l:save_regmode = getregtype('"')
+    call setreg('"', l:insertion, 'v')
+    try
+	execute 'normal!' a:multiplier . 'p'
+    finally
+	call setreg('"', l:save_reg, l:save_regmode)
+	let &clipboard = l:save_clipboard
+    endtry
+endfunction
+function! PrevInsertComplete#List()
+    if len(s:insertions) == 0
+	let v:errmsg = 'No insertions yet'
+	echohl ErrorMsg
+	echomsg v:errmsg
+	echohl None
+	return
+    endif
+
+    echohl Title
+    echo '      #  insertion'
+    echohl None
+    for i in range(min([9, len(s:insertions)]), 1, -1)
+	echo '      ' . i . '  ' . EchoWithoutScrolling#TranslateLineBreaks(s:insertions[i - 1])
+    endfor
+    echo 'Type number (<Enter> cancels): ' 
+    call inputsave()
+    let l:choice = nr2char(getchar())
+    call inputrestore()
+    if l:choice =~# '\d'
+	call PrevInsertComplete#Recall(l:choice, v:count1)
+    endif
+endfunction
+nnoremap <silent> <Plug>(PrevInsertRecall) :<C-u>call PrevInsertComplete#Recall(v:count1, 1)<CR>
+if ! hasmapto('<Plug>(PrevInsertRecall)', 'n')
+    nmap qa <Plug>(PrevInsertRecall)
+endif
+nnoremap <silent> <Plug>(PrevInsertList) :<C-u>call PrevInsertComplete#List()<CR>
+if ! hasmapto('<Plug>(PrevInsertList)', 'n')
+    nmap q<C-a> <Plug>(PrevInsertList)
+endif
+
 
 function! Debug()
     echo s:insertions
