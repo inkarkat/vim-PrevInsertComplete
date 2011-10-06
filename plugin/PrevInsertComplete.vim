@@ -10,6 +10,7 @@
 " INSTALLATION:
 " DEPENDENCIES:
 "   - CompleteHelper.vim autoload script. 
+"   - ingodate.vim autoload script. 
 "
 " CONFIGURATION:
 " INTEGRATION:
@@ -18,7 +19,6 @@
 " KNOWN PROBLEMS:
 " TODO:
 "  - Repetition via <C-x><C-a>
-"  - add "42s ago" as menu, factored out from wbVC
 "
 " Copyright: (C) 2011 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'. 
@@ -63,6 +63,7 @@ function! s:GetInsertion()
     return CompleteHelper#ExtractText(l:startPos, l:endPos, {})
 endfunction
 let s:insertions = []
+let s:insertionTimes = []
 function! PrevInsertComplete#RecordInsertion()
     let l:text = s:GetInsertion()
     if l:text =~# '^\_s*$' || s:strchars(l:text) < g:PrevInsertComplete_MinLength
@@ -73,15 +74,35 @@ function! PrevInsertComplete#RecordInsertion()
     let l:histIdx = index(s:insertions, l:text)
     if l:histIdx == -1
 	call insert(s:insertions, l:text, 0)
+	call insert(s:insertionTimes, localtime(), 0)
 	silent! call remove(s:insertions, g:PrevInsertComplete_HistorySize, -1)
     else
 	" Like in the Vim histories, the same history item replaces the previous
 	" ones and is put at the top. 
 	call remove(s:insertions, l:histIdx)
+	call remove(s:insertionTimes, l:histIdx)
 	call insert(s:insertions, l:text, 0)
+	call insert(s:insertionTimes, localtime(), 0)
     endif
 endfunction
 
+function! s:ComputeReltime( matchObj )
+    let a:matchObj.menu = ingodate#HumanReltime(localtime() - a:matchObj.menu, {'shortformat': 1, 'rightaligned': 1})
+    return a:matchObj
+endfunction
+if v:version >= 703 || v:version == 702 && has('patch295')
+function! PrevInsertComplete#FindMatches( pattern )
+    " Use default comparison operator here to honor the 'ignorecase' setting. 
+    return
+    \	map(
+    \	    filter(
+    \		map(copy(s:insertions), '{"word": v:val, "menu": s:insertionTimes[v:key]}'),
+    \		'v:val.word =~ a:pattern'
+    \	    ),
+    \	    'CompleteHelper#Abbreviate(s:ComputeReltime(v:val))'
+    \	)
+endfunction
+else
 function! PrevInsertComplete#FindMatches( pattern )
     " Use default comparison operator here to honor the 'ignorecase' setting. 
     return
@@ -90,6 +111,7 @@ function! PrevInsertComplete#FindMatches( pattern )
     \	    'CompleteHelper#Abbreviate({"word": v:val})'
     \	)
 endfunction
+endif
 function! PrevInsertComplete#PrevInsertComplete( findstart, base )
     if a:findstart
 	" Locate the start of the keyword. 
