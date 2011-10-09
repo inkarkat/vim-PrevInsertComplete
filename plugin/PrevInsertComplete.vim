@@ -70,16 +70,15 @@ function! s:GetInsertion()
 endfunction
 let s:insertions = []
 let s:insertionTimes = []
-function! PrevInsertComplete#RecordInsertion()
-    let l:text = s:GetInsertion()
-    if l:text =~# '^\_s*$' || s:strchars(l:text) < g:PrevInsertComplete_MinLength
+function! PrevInsertComplete#RecordInsertion( text )
+    if a:text =~# '^\_s*$' || s:strchars(a:text) < g:PrevInsertComplete_MinLength
 	" Do not record whitespace-only and short insertions. 
 	return
     endif
 
-    let l:histIdx = index(s:insertions, l:text)
+    let l:histIdx = index(s:insertions, a:text)
     if l:histIdx == -1
-	call insert(s:insertions, l:text, 0)
+	call insert(s:insertions, a:text, 0)
 	call insert(s:insertionTimes, localtime(), 0)
 	silent! call remove(s:insertions, g:PrevInsertComplete_HistorySize, -1)
     else
@@ -87,7 +86,7 @@ function! PrevInsertComplete#RecordInsertion()
 	" ones and is put at the top. 
 	call remove(s:insertions, l:histIdx)
 	call remove(s:insertionTimes, l:histIdx)
-	call insert(s:insertions, l:text, 0)
+	call insert(s:insertions, a:text, 0)
 	call insert(s:insertionTimes, localtime(), 0)
     endif
 endfunction
@@ -148,7 +147,7 @@ endif
 
 augroup PrevInsertComplete
     autocmd!
-    autocmd InsertLeave * call PrevInsertComplete#RecordInsertion()
+    autocmd InsertLeave * call PrevInsertComplete#RecordInsertion(s:GetInsertion())
 augroup END
 
 function! PrevInsertComplete#Recall( position, multiplier )
@@ -184,6 +183,10 @@ function! PrevInsertComplete#Recall( position, multiplier )
 	call setreg('"', l:save_reg, l:save_regmode)
 	let &clipboard = l:save_clipboard
     endtry
+
+    " Execution of the recall command counts as an insertion itself. However, we
+    " do not consider the a:multiplier here. 
+    call PrevInsertComplete#RecordInsertion(l:insertion)
 endfunction
 function! PrevInsertComplete#List()
     if len(s:insertions) == 0
