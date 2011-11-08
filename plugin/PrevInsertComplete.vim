@@ -7,6 +7,8 @@
 "			contents match the keyword before the cursor. First, a
 "			match at the beginning is tried; if that returns no
 "			results, it may match anywhere. 
+"			Further use of CTRL-X CTRL-A will append insertions done
+"			after the previous recall. 
 "									    *qa*
 " [count]qa		Recall and append previous [count]'th insertion. 
 "								      *q_CTRL-A*
@@ -16,6 +18,7 @@
 " INSTALLATION:
 " DEPENDENCIES:
 "   - CompleteHelper.vim autoload script. 
+"   - CompleteHelper/Repeat.vim autoload script. 
 "   - ingodate.vim autoload script. 
 "
 " CONFIGURATION:
@@ -24,7 +27,6 @@
 " ASSUMPTIONS:
 " KNOWN PROBLEMS:
 " TODO:
-"  - Repetition via <C-x><C-a>
 "
 " Copyright: (C) 2011 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'. 
@@ -32,6 +34,8 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS 
+"	002	10-Oct-2011	Implement repetition with following history
+"				items. 
 "	001	06-Oct-2011	file creation
 let s:save_cpo = &cpo
 set cpo&vim
@@ -68,8 +72,8 @@ function! s:GetInsertion()
     let l:endPos = [line("']"), (col("']") - 1)]
     return CompleteHelper#ExtractText(l:startPos, l:endPos, {})
 endfunction
-let s:insertions = []
-let s:insertionTimes = []
+let s:insertions = ['fifth', 'fourth', 'third', 'second', 'first'] " XXX: DEBUG
+let s:insertionTimes = [0, 0, 0, 0, 0, 0]
 function! PrevInsertComplete#RecordInsertion( text )
     if a:text =~# '^\_s*$' || s:strchars(a:text) < g:PrevInsertComplete_MinLength
 	" Do not record whitespace-only and short insertions. 
@@ -117,7 +121,22 @@ function! PrevInsertComplete#FindMatches( pattern )
     \	)
 endfunction
 endif
+let s:repeatCnt = 0
 function! PrevInsertComplete#PrevInsertComplete( findstart, base )
+    if s:repeatCnt
+	if a:findstart
+	    return col('.') - 1
+	else
+	    let l:histIdx = index(s:insertions, s:addedText)
+"****D echomsg '***1' l:histIdx s:addedText
+	    if l:histIdx == -1 || l:histIdx == 0
+		return []
+	    endif
+"****D echomsg '***2' get(s:insertions, (l:histIdx - 1), '')
+	    return [{'word': get(s:insertions, (l:histIdx - 1), '')}]
+	endif
+    endif
+
     if a:findstart
 	" Locate the start of the keyword. 
 	let l:startCol = searchpos('\k*\%#', 'bn', line('.'))[1]
@@ -138,6 +157,10 @@ endfunction
 
 function! s:PrevInsertCompleteExpr()
     set completefunc=PrevInsertComplete#PrevInsertComplete
+
+    let s:repeatCnt = 0
+    let [s:repeatCnt, s:addedText, l:fullText] = CompleteHelper#Repeat#TestForRepeat()
+"****D echomsg '****' string( [s:repeatCnt, s:addedText, l:fullText] )
     return "\<C-x>\<C-u>"
 endfunction
 inoremap <script> <expr> <Plug>(PrevInsertComplete) <SID>PrevInsertCompleteExpr()
