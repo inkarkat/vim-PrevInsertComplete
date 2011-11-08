@@ -34,6 +34,7 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS 
+"	003	09-Nov-2011	FIX: Avoid hit-enter prompt after q<CTRL-A>. 
 "	002	10-Oct-2011	Implement repetition with following history
 "				items. 
 "	001	06-Oct-2011	file creation
@@ -72,7 +73,8 @@ function! s:GetInsertion()
     let l:endPos = [line("']"), (col("']") - 1)]
     return CompleteHelper#ExtractText(l:startPos, l:endPos, {})
 endfunction
-let s:insertions = ['fifth', 'fourth', 'third', 'second', 'first'] " XXX: DEBUG
+let s:insertions = []
+"****D let s:insertions = ['fifth', 'fourth', 'third', 'second', 'first'] " XXX: DEBUG
 let s:insertionTimes = [0, 0, 0, 0, 0, 0]
 function! PrevInsertComplete#RecordInsertion( text )
     if a:text =~# '^\_s*$' || s:strchars(a:text) < g:PrevInsertComplete_MinLength
@@ -231,6 +233,7 @@ function! PrevInsertComplete#List()
     let l:choice = nr2char(getchar())
     call inputrestore()
     if l:choice =~# '\d'
+	redraw	" Somehow need this to avoid the hit-enter prompt. 
 	call PrevInsertComplete#Recall(l:choice, v:count1)
     endif
 endfunction
@@ -242,11 +245,6 @@ nnoremap <silent> <Plug>(PrevInsertList) :<C-u>call PrevInsertComplete#List()<CR
 if ! hasmapto('<Plug>(PrevInsertList)', 'n')
     nmap q<C-a> <Plug>(PrevInsertList)
 endif
-
-
-function! Debug()
-    echo s:insertions
-endfunction
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
