@@ -76,7 +76,7 @@ function! PrevInsertComplete#PrevInsertComplete( findstart, base )
     endif
 endfunction
 
-function! s:PrevInsertCompleteExpr()
+function! PrevInsertComplete#Expr()
     set completefunc=PrevInsertComplete#PrevInsertComplete
 
     let s:repeatCnt = 0
@@ -150,4 +150,4 @@ endfunction
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
-" vim: set sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
+" vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
