@@ -6,12 +6,13 @@
 "   - ingodate.vim autoload script. 
 "   - PrevInsertComplete/Record.vim autoload script. 
 "
-" Copyright: (C) 2011 Ingo Karkat
+" Copyright: (C) 2011-2012 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'. 
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS 
+"	002	23-Mar-2012	No need for inputsave() around getchar().
 "	001	09-Nov-2011	file creation from plugin/PrevInsertComplete.vim. 
 let s:save_cpo = &cpo
 set cpo&vim
@@ -139,9 +140,7 @@ function! PrevInsertComplete#List()
 	echo '      ' . i . '  ' . EchoWithoutScrolling#TranslateLineBreaks(g:PrevInsertComplete_Insertions[i - 1])
     endfor
     echo 'Type number (<Enter> cancels): ' 
-    call inputsave()
     let l:choice = nr2char(getchar())
-    call inputrestore()
     if l:choice =~# '\d'
 	redraw	" Somehow need this to avoid the hit-enter prompt. 
 	call PrevInsertComplete#Recall(l:choice, v:count1)
