@@ -1,5 +1,5 @@
-*PrevInsertComplete.txt* Recall and insert mode completion for previously inserted text. 
-		        
+*PrevInsertComplete.txt* Recall and insert mode completion for previously inserted text.
+
 		    PREV INSERT COMPLETE    by Ingo Karkat
 						      *PrevInsertComplete.vim*
 description			|PrevInsertComplete-description|
@@ -26,14 +26,14 @@ USAGE						    *PrevInsertComplete-usage*
 <i_CTRL-X_CTRL-A>	Find previous insertions (|i_CTRL-A|, |quote.|) whose
 			contents match the keyword before the cursor. First, a
 			match at the beginning is tried; if that returns no
-			results, it may match anywhere. 
+			results, it may match anywhere.
 			Further use of CTRL-X CTRL-A will append insertions done
-			after the previous recall. 
+			after the previous recall.
 									  *qa*
-[count]qa		Recall and append previous [count]'th insertion. 
+[count]qa		Recall and append previous [count]'th insertion.
 								    *q_CTRL-A*
 [count]q<CTRL-A>	Lists the last 9 insertions, then prompts for a number.
-			The chosen insertion is appended [count] times. 
+			The chosen insertion is appended [count] times.
 
 ==============================================================================
 INSTALLATION				     *PrevInsertComplete-installation*
@@ -44,16 +44,18 @@ the archive first, e.g. using WinZip. Inside Vim, install by sourcing the
 vimball or via the |:UseVimball| command. >
     vim PrevInsertComplete.vba.gz
     :so %
-To uninstall, use the |:RmVimball| command. 
+To uninstall, use the |:RmVimball| command.
 
 DEPENDENCIES				     *PrevInsertComplete-dependencies*
 
-- Requires Vim 7.0 or higher. 
+- Requires Vim 7.0 or higher.
+- Requires the CompleteHelper.vim plugin (vimscript #3914), version 1.01 or
+  higher.
 
 ==============================================================================
 CONFIGURATION				    *PrevInsertComplete-configuration*
 
-For a permanent configuration, put the following commands into your |vimrc|: 
+For a permanent configuration, put the following commands into your |vimrc|:
 
 					      *g:PrevInsertComplete_MinLength*
 Very short insertions are often just minor corrections and not worthwhile to
@@ -70,7 +72,7 @@ KNOWN PROBLEMS				   *PrevInsertComplete-known-problems*
 
 TODO						     *PrevInsertComplete-todo*
 
-- Persist recorded insertions across Vim invocations in the |viminfo| file. 
+- Persist recorded insertions across Vim invocations in the |viminfo| file.
 
 
 IDEAS						    *PrevInsertComplete-ideas*
@@ -78,12 +80,15 @@ IDEAS						    *PrevInsertComplete-ideas*
 ==============================================================================
 HISTORY						  *PrevInsertComplete-history*
 
+GOAL
+Initial release.
+
 0.01	06-Oct-2011
-Started development. 
+Started development.
 
 ==============================================================================
-Copyright: (C) 2011 Ingo Karkat
-The VIM LICENSE applies to this script; see |copyright|. 
+Copyright: (C) 2011-2012 Ingo Karkat
+The VIM LICENSE applies to this script; see |copyright|.
 
 Maintainer:	Ingo Karkat <ingo@karkat.de>
 ==============================================================================
