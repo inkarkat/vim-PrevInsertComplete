@@ -1,19 +1,22 @@
-" PrevInsertComplete.vim: Recall and insert mode completion for previously inserted text. 
+" PrevInsertComplete.vim: Recall and insert mode completion for previously inserted text.
 "
 " DEPENDENCIES:
-"   - CompleteHelper.vim autoload script. 
-"   - CompleteHelper/Repeat.vim autoload script. 
-"   - ingodate.vim autoload script. 
-"   - PrevInsertComplete/Record.vim autoload script. 
+"   - CompleteHelper/Abbreviate.vim autoload script
+"   - CompleteHelper/Repeat.vim autoload script
+"   - ingodate.vim autoload script
+"   - PrevInsertComplete/Record.vim autoload script
 "
 " Copyright: (C) 2011-2012 Ingo Karkat
-"   The VIM LICENSE applies to this script; see ':help copyright'. 
+"   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
-" REVISION	DATE		REMARKS 
+" REVISION	DATE		REMARKS
+"	003	05-May-2012	Move dependency from CompleteHelper.vim to
+"				CompleteHelper/Abbreviate.vim script broken out
+"				in version 1.01.
 "	002	23-Mar-2012	No need for inputsave() around getchar().
-"	001	09-Nov-2011	file creation from plugin/PrevInsertComplete.vim. 
+"	001	09-Nov-2011	file creation from plugin/PrevInsertComplete.vim.
 let s:save_cpo = &cpo
 set cpo&vim
 
@@ -23,23 +26,23 @@ function! s:ComputeReltime( matchObj )
 endfunction
 if v:version >= 703 || v:version == 702 && has('patch295')
 function! PrevInsertComplete#FindMatches( pattern )
-    " Use default comparison operator here to honor the 'ignorecase' setting. 
+    " Use default comparison operator here to honor the 'ignorecase' setting.
     return
     \	map(
     \	    filter(
     \		map(copy(g:PrevInsertComplete_Insertions), '{"word": v:val, "menu": g:PrevInsertComplete_InsertionTimes[v:key]}'),
     \		'v:val.word =~ a:pattern'
     \	    ),
-    \	    'CompleteHelper#Abbreviate(s:ComputeReltime(v:val))'
+    \	    'CompleteHelper#Abbreviate#Word(s:ComputeReltime(v:val))'
     \	)
 endfunction
 else
 function! PrevInsertComplete#FindMatches( pattern )
-    " Use default comparison operator here to honor the 'ignorecase' setting. 
+    " Use default comparison operator here to honor the 'ignorecase' setting.
     return
     \	map(
     \	    filter(copy(g:PrevInsertComplete_Insertions), 'v:val =~ a:pattern'),
-    \	    'CompleteHelper#Abbreviate({"word": v:val})'
+    \	    'CompleteHelper#Abbreviate#Word({"word": v:val})'
     \	)
 endfunction
 endif
@@ -60,17 +63,17 @@ function! PrevInsertComplete#PrevInsertComplete( findstart, base )
     endif
 
     if a:findstart
-	" Locate the start of the keyword. 
+	" Locate the start of the keyword.
 	let l:startCol = searchpos('\k*\%#', 'bn', line('.'))[1]
 	if l:startCol == 0
 	    let l:startCol = col('.')
 	endif
-	return l:startCol - 1 " Return byte index, not column. 
+	return l:startCol - 1 " Return byte index, not column.
     else
-	" Find matches starting with (after optional non-keyword characters) a:base. 
+	" Find matches starting with (after optional non-keyword characters) a:base.
 	let l:matches = PrevInsertComplete#FindMatches('^\%(\k\@!.\)*\V' . escape(a:base, '\'))
 	if empty(l:matches)
-	    " Find matches containing a:base. 
+	    " Find matches containing a:base.
 	    let l:matches = PrevInsertComplete#FindMatches('\V' . escape(a:base, '\'))
 	endif
 	return l:matches
@@ -105,11 +108,11 @@ function! PrevInsertComplete#Recall( position, multiplier )
 	return
     endif
 
-    " This doesn't work with special characters like <Esc>. 
+    " This doesn't work with special characters like <Esc>.
     "execute 'normal! a' . l:insertion . "\<Esc>"
 
     let l:save_clipboard = &clipboard
-    set clipboard= " Avoid clobbering the selection and clipboard registers. 
+    set clipboard= " Avoid clobbering the selection and clipboard registers.
     let l:save_reg = getreg('"')
     let l:save_regmode = getregtype('"')
     call setreg('"', l:insertion, 'v')
@@ -121,7 +124,7 @@ function! PrevInsertComplete#Recall( position, multiplier )
     endtry
 
     " Execution of the recall command counts as an insertion itself. However, we
-    " do not consider the a:multiplier here. 
+    " do not consider the a:multiplier here.
     call PrevInsertComplete#Record#Insertion(l:insertion)
 endfunction
 function! PrevInsertComplete#List()
@@ -139,10 +142,10 @@ function! PrevInsertComplete#List()
     for i in range(min([9, len(g:PrevInsertComplete_Insertions)]), 1, -1)
 	echo '      ' . i . '  ' . EchoWithoutScrolling#TranslateLineBreaks(g:PrevInsertComplete_Insertions[i - 1])
     endfor
-    echo 'Type number (<Enter> cancels): ' 
+    echo 'Type number (<Enter> cancels): '
     let l:choice = nr2char(getchar())
     if l:choice =~# '\d'
-	redraw	" Somehow need this to avoid the hit-enter prompt. 
+	redraw	" Somehow need this to avoid the hit-enter prompt.
 	call PrevInsertComplete#Recall(l:choice, v:count1)
     endif
 endfunction
