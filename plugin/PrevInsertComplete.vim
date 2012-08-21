@@ -1,23 +1,24 @@
-" PrevInsertComplete.vim: Recall and insert mode completion for previously inserted text. 
+" PrevInsertComplete.vim: Recall and insert mode completion for previously inserted text.
 "
 " DEPENDENCIES:
-"   - Requires Vim 7.0 or higher. 
-"   - PrevInsertComplete.vim autoload script. 
-"   - PrevInsertComplete/Record.vim autoload script. 
+"   - Requires Vim 7.0 or higher.
+"   - PrevInsertComplete.vim autoload script.
+"   - PrevInsertComplete/Record.vim autoload script.
 "
-" Copyright: (C) 2011 Ingo Karkat
-"   The VIM LICENSE applies to this script; see ':help copyright'. 
+" Copyright: (C) 2011-2012 Ingo Karkat
+"   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
-" REVISION	DATE		REMARKS 
-"	003	09-Nov-2011	FIX: Avoid hit-enter prompt after q<CTRL-A>. 
-"				Split off autoload script and documentation. 
+" REVISION	DATE		REMARKS
+"   1.00.004	22-Aug-2012	Minor cleanup to prepare for publishing.
+"	003	09-Nov-2011	FIX: Avoid hit-enter prompt after q<CTRL-A>.
+"				Split off autoload script and documentation.
 "	002	10-Oct-2011	Implement repetition with following history
-"				items. 
+"				items.
 "	001	06-Oct-2011	file creation
 
-" Avoid installing twice or when in unsupported Vim version. 
+" Avoid installing twice or when in unsupported Vim version.
 if exists('g:loaded_PrevInsertComplete') || (v:version < 700)
     finish
 endif
@@ -36,15 +37,13 @@ endif
 "- internal data structures ----------------------------------------------------
 
 let g:PrevInsertComplete_Insertions = []
-"****D let g:PrevInsertComplete_Insertions = ['fifth', 'fourth', 'third', 'second', 'first'] " XXX: DEBUG
-let g:PrevInsertComplete_InsertionTimes = [0, 0, 0, 0, 0, 0]
+let g:PrevInsertComplete_InsertionTimes = []
 
 
 "- autocmds --------------------------------------------------------------------
 
 augroup PrevInsertComplete
-    autocmd!
-    autocmd InsertLeave * call PrevInsertComplete#Record#Do()
+    autocmd! InsertLeave * call PrevInsertComplete#Record#Do()
 augroup END
 
 
