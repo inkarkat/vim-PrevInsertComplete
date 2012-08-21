@@ -12,7 +12,7 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
-"	004	21-Aug-2012	Minor: Reduce initial indent in list; :marks and
+"   1.00.004	21-Aug-2012	Minor: Reduce initial indent in list; :marks and
 "				:jumps have little indent, too.
 "	003	05-May-2012	Move dependency from CompleteHelper.vim to
 "				CompleteHelper/Abbreviate.vim script broken out
