@@ -1,0 +1,5 @@
+autoload/PrevInsertComplete.vim
+autoload/PrevInsertComplete/Record.vim
+autoload/ingodate.vim
+plugin/PrevInsertComplete.vim
+doc/PrevInsertComplete.txt
