@@ -50,7 +50,7 @@ augroup END
 
 "- mappings --------------------------------------------------------------------
 
-inoremap <script> <expr> <Plug>(PrevInsertComplete) <SID>PrevInsertCompleteExpr()
+inoremap <script> <expr> <Plug>(PrevInsertComplete) PrevInsertComplete#Expr()
 if ! hasmapto('<Plug>(PrevInsertComplete)', 'i')
     imap <C-x><C-a> <Plug>(PrevInsertComplete)
 endif
@@ -64,4 +64,4 @@ if ! hasmapto('<Plug>(PrevInsertList)', 'n')
     nmap q<C-a> <Plug>(PrevInsertList)
 endif
 
-" vim: set sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
+" vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
