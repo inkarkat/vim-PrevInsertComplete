@@ -23,7 +23,7 @@ RELATED WORKS								     *
 ==============================================================================
 USAGE						    *PrevInsertComplete-usage*
 							     *i_CTRL-X_CTRL-A*
-<i_CTRL-X_CTRL-A>	Find previous insertions (|i_CTRL-A|, |quote.|) whose
+CTRL-X CTRL-A		Find previous insertions (|i_CTRL-A|, |quote.|) whose
 			contents match the keyword before the cursor. First, a
 			match at the beginning is tried; if that returns no
 			results, it may match anywhere.
