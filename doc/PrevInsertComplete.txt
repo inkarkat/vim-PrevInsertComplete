@@ -14,11 +14,21 @@ history				|PrevInsertComplete-history|
 ==============================================================================
 DESCRIPTION				      *PrevInsertComplete-description*
 
-This plugin ...
+This plugin lets you quickly recall previous insertions and insert them again
+at the cursor position. Essentially, it's the built-in |i_CTRL-A| command
+souped up with history and selection.
 
-HOW IT WORKS								     *
+In insert mode, you can narrow down the candidates by typing a keyword first;
+then, only insertions with a match will be offered as completion candidates.
+In normal mode, you can directly recall the [count]'th previous insertion, or
+have it list the last 9 insertions and let you choose.
+To avoid that the many minor tactical edits clobber up the history, only
+significant (longer) edits are recalled.
 
-RELATED WORKS								     *
+SEE ALSO								     *
+
+- Check out the CompleteHelper.vim plugin page (vimscript #3914) for a full
+  list of insert mode completions powered by it.
 
 ==============================================================================
 USAGE						    *PrevInsertComplete-usage*
@@ -39,17 +49,17 @@ CTRL-X CTRL-A		Find previous insertions (|i_CTRL-A|, |quote.|) whose
 INSTALLATION				     *PrevInsertComplete-installation*
 
 This script is packaged as a |vimball|. If you have the "gunzip" decompressor
-in your PATH, simply edit the *.vba.gz package in Vim; otherwise, decompress
+in your PATH, simply edit the *.vmb.gz package in Vim; otherwise, decompress
 the archive first, e.g. using WinZip. Inside Vim, install by sourcing the
 vimball or via the |:UseVimball| command. >
-    vim PrevInsertComplete.vba.gz
+    vim PrevInsertComplete*.vmb.gz
     :so %
 To uninstall, use the |:RmVimball| command.
 
 DEPENDENCIES				     *PrevInsertComplete-dependencies*
 
 - Requires Vim 7.0 or higher.
-- Requires the CompleteHelper.vim plugin (vimscript #3914), version 1.01 or
+- Requires the CompleteHelper.vim plugin (vimscript #3914), version 1.10 or
   higher.
 
 ==============================================================================
@@ -57,6 +67,13 @@ CONFIGURATION				    *PrevInsertComplete-configuration*
 
 For a permanent configuration, put the following commands into your |vimrc|:
 
+If you want to use different mappings, map your keys to the
+<Plug>(PrevInsert...) mapping targets _before_ sourcing this script (e.g. in
+your |vimrc|): >
+    imap <C-a> <Plug>(PrevInsertComplete)
+    nmap <Leader><C-a> <Plug>(PrevInsertRecall)
+    nmap <Leader><A-a> <Plug>(PrevInsertList)
+<
 					      *g:PrevInsertComplete_MinLength*
 Very short insertions are often just minor corrections and not worthwhile to
 recall. The threshold number of inserted characters can be set via: >
@@ -80,7 +97,7 @@ IDEAS						    *PrevInsertComplete-ideas*
 ==============================================================================
 HISTORY						  *PrevInsertComplete-history*
 
-GOAL
+1.00	22-Aug-2012
 Initial release.
 
 0.01	06-Oct-2011
