@@ -12,6 +12,8 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"	004	21-Aug-2012	Minor: Reduce initial indent in list; :marks and
+"				:jumps have little indent, too.
 "	003	05-May-2012	Move dependency from CompleteHelper.vim to
 "				CompleteHelper/Abbreviate.vim script broken out
 "				in version 1.01.
@@ -137,10 +139,10 @@ function! PrevInsertComplete#List()
     endif
 
     echohl Title
-    echo '      #  insertion'
+    echo ' #  insertion'
     echohl None
     for i in range(min([9, len(g:PrevInsertComplete_Insertions)]), 1, -1)
-	echo '      ' . i . '  ' . EchoWithoutScrolling#TranslateLineBreaks(g:PrevInsertComplete_Insertions[i - 1])
+	echo ' ' . i . '  ' . EchoWithoutScrolling#TranslateLineBreaks(g:PrevInsertComplete_Insertions[i - 1])
     endfor
     echo 'Type number (<Enter> cancels): '
     let l:choice = nr2char(getchar())
