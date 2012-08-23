@@ -33,6 +33,10 @@ if ! exists('g:PrevInsertComplete_HistorySize')
     let g:PrevInsertComplete_HistorySize = 100
 endif
 
+if ! exists('g:PrevInsertComplete_PersistSize')
+    let g:PrevInsertComplete_PersistSize = g:PrevInsertComplete_HistorySize
+endif
+
 
 "- internal data structures ----------------------------------------------------
 
@@ -43,7 +47,20 @@ let g:PrevInsertComplete_InsertionTimes = []
 "- autocmds --------------------------------------------------------------------
 
 augroup PrevInsertComplete
-    autocmd! InsertLeave * call PrevInsertComplete#Record#Do()
+    autocmd!
+    autocmd InsertLeave * call PrevInsertComplete#Record#Do()
+
+    if g:PrevInsertComplete_PersistSize > 0
+	" As the viminfo is only processed after sourcing of the runtime files, the
+	" persistent global variables are not yet available here. Defer this until Vim
+	" startup has completed.
+	autocmd VimEnter    * call PrevInsertComplete#Persist#Load()
+
+	" Do not update the persistent variables after each insertion; their
+	" size is not negligible. Instead, clear them after reading them and
+	" only write them when exiting Vim, before the viminfo file is written.
+	autocmd VimLeavePre * call PrevInsertComplete#Persist#Save()
+    endif
 augroup END
 
 
