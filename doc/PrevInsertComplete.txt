@@ -27,7 +27,7 @@ significant (longer) edits are recalled.
 
 SEE ALSO								     *
 
-- Check out the CompleteHelper.vim plugin page (vimscript #3914) for a full
+- Check out the |CompleteHelper.vim| plugin page (vimscript #3914) for a full
   list of insert mode completions powered by it.
 
 ==============================================================================
@@ -59,7 +59,7 @@ To uninstall, use the |:RmVimball| command.
 DEPENDENCIES				     *PrevInsertComplete-dependencies*
 
 - Requires Vim 7.0 or higher.
-- Requires the CompleteHelper.vim plugin (vimscript #3914), version 1.10 or
+- Requires the |CompleteHelper.vim| plugin (vimscript #3914), version 1.10 or
   higher.
 
 ==============================================================================
