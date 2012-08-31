@@ -70,7 +70,7 @@ For a permanent configuration, put the following commands into your |vimrc|:
 					      *g:PrevInsertComplete_MinLength*
 Very short insertions are often just minor corrections and not worthwhile to
 recall. The threshold number of inserted characters can be set via: >
-    let g:PrevInsertComplete_MinLength = 10
+    let g:PrevInsertComplete_MinLength = 6
 <					    *g:PrevInsertComplete_HistorySize*
 The number of recorded insertions can be adjusted. >
     let g:PrevInsertComplete_HistorySize = 100
@@ -87,7 +87,7 @@ or completely turn off persistence by setting the variable to 0.
 
 
 If you want to use different mappings, map your keys to the
-<Plug>(PrevInsert...) mapping targets _before_ sourcing this script (e.g. in
+<Plug>(PrevInsert...) mapping targets _before_ sourcing the script (e.g. in
 your |vimrc|): >
     imap <C-a> <Plug>(PrevInsertComplete)
     nmap <Leader><C-a> <Plug>(PrevInsertRecall)
