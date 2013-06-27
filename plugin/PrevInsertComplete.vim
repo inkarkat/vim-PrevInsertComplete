@@ -11,6 +11,10 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   1.10.005	24-Aug-2012	CHG: Reduce default
+"				g:PrevInsertComplete_MinLength from 10 to 6.
+"				FIX: Handle 'readonly' and 'nomodifiable'
+"				buffers without function errors.
 "   1.00.004	22-Aug-2012	Minor cleanup to prepare for publishing.
 "	003	09-Nov-2011	FIX: Avoid hit-enter prompt after q<CTRL-A>.
 "				Split off autoload script and documentation.
@@ -27,7 +31,7 @@ let g:loaded_PrevInsertComplete = 1
 "- configuration ---------------------------------------------------------------
 
 if ! exists('g:PrevInsertComplete_MinLength')
-    let g:PrevInsertComplete_MinLength = 10
+    let g:PrevInsertComplete_MinLength = 6
 endif
 if ! exists('g:PrevInsertComplete_HistorySize')
     let g:PrevInsertComplete_HistorySize = 100
@@ -71,11 +75,11 @@ if ! hasmapto('<Plug>(PrevInsertComplete)', 'i')
     imap <C-x><C-a> <Plug>(PrevInsertComplete)
 endif
 
-nnoremap <silent> <Plug>(PrevInsertRecall) :<C-u>call PrevInsertComplete#Recall(v:count1, 1)<CR>
+nnoremap <silent> <Plug>(PrevInsertRecall) :<C-u>call setline('.', getline('.'))<Bar>call PrevInsertComplete#Recall(v:count1, 1)<CR>
 if ! hasmapto('<Plug>(PrevInsertRecall)', 'n')
     nmap qa <Plug>(PrevInsertRecall)
 endif
-nnoremap <silent> <Plug>(PrevInsertList) :<C-u>call PrevInsertComplete#List()<CR>
+nnoremap <silent> <Plug>(PrevInsertList) :<C-u>call setline('.', getline('.'))<Bar>call PrevInsertComplete#List()<CR>
 if ! hasmapto('<Plug>(PrevInsertList)', 'n')
     nmap q<C-a> <Plug>(PrevInsertList)
 endif
