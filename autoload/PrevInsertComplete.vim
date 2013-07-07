@@ -3,15 +3,17 @@
 " DEPENDENCIES:
 "   - CompleteHelper/Abbreviate.vim autoload script
 "   - CompleteHelper/Repeat.vim autoload script
+"   - ingo/avoidprompt.vim autoload script
 "   - ingodate.vim autoload script
 "   - PrevInsertComplete/Record.vim autoload script
 "
-" Copyright: (C) 2011-2012 Ingo Karkat
+" Copyright: (C) 2011-2013 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   1.11.006	07-Jun-2013	Move EchoWithoutScrolling.vim into ingo-library.
 "   1.10.005	22-Aug-2012	Do not show relative time when the timestamp is
 "				invalid (i.e. negative or zero). This is better
 "				when the g:PrevInsertComplete_InsertionTimes
@@ -149,7 +151,7 @@ function! PrevInsertComplete#List()
     echo ' #  insertion'
     echohl None
     for i in range(min([9, len(g:PrevInsertComplete_Insertions)]), 1, -1)
-	echo ' ' . i . '  ' . EchoWithoutScrolling#TranslateLineBreaks(g:PrevInsertComplete_Insertions[i - 1])
+	echo ' ' . i . '  ' . ingo#avoidprompt#TranslateLineBreaks(g:PrevInsertComplete_Insertions[i - 1])
     endfor
     echo 'Type number (<Enter> cancels): '
     let l:choice = nr2char(getchar())
