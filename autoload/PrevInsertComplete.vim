@@ -4,7 +4,7 @@
 "   - CompleteHelper/Abbreviate.vim autoload script
 "   - CompleteHelper/Repeat.vim autoload script
 "   - ingo/avoidprompt.vim autoload script
-"   - ingodate.vim autoload script
+"   - ingo/date.vim autoload script
 "   - PrevInsertComplete/Record.vim autoload script
 "
 " Copyright: (C) 2011-2013 Ingo Karkat
@@ -13,6 +13,7 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   1.11.007	08-Jul-2013	Move ingodate.vim into ingo-library.
 "   1.11.006	07-Jun-2013	Move EchoWithoutScrolling.vim into ingo-library.
 "   1.10.005	22-Aug-2012	Do not show relative time when the timestamp is
 "				invalid (i.e. negative or zero). This is better
@@ -31,7 +32,7 @@ set cpo&vim
 function! s:ComputeReltime( matchObj )
     let a:matchObj.menu = (a:matchObj.menu <= 0 ?
     \	'' :
-    \   ingodate#HumanReltime(localtime() - a:matchObj.menu, {'shortformat': 1, 'rightaligned': 1})
+    \   ingo#date#HumanReltime(localtime() - a:matchObj.menu, {'shortformat': 1, 'rightaligned': 1})
     \)
     return a:matchObj
 endfunction
