@@ -5,12 +5,15 @@
 "   - PrevInsertComplete.vim autoload script.
 "   - PrevInsertComplete/Record.vim autoload script.
 "
-" Copyright: (C) 2011-2012 Ingo Karkat
+" Copyright: (C) 2011-2013 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   1.11.006	28-Jun-2013	Change qa mapping default to q<C-@>; I found it
+"				confusing that I could not record macros into
+"				register a any more.
 "   1.10.005	24-Aug-2012	CHG: Reduce default
 "				g:PrevInsertComplete_MinLength from 10 to 6.
 "				FIX: Handle 'readonly' and 'nomodifiable'
@@ -77,7 +80,7 @@ endif
 
 nnoremap <silent> <Plug>(PrevInsertRecall) :<C-u>call setline('.', getline('.'))<Bar>call PrevInsertComplete#Recall(v:count1, 1)<CR>
 if ! hasmapto('<Plug>(PrevInsertRecall)', 'n')
-    nmap qa <Plug>(PrevInsertRecall)
+    nmap q<C-@> <Plug>(PrevInsertRecall)
 endif
 nnoremap <silent> <Plug>(PrevInsertList) :<C-u>call setline('.', getline('.'))<Bar>call PrevInsertComplete#List()<CR>
 if ! hasmapto('<Plug>(PrevInsertList)', 'n')
