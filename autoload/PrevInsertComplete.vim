@@ -5,6 +5,8 @@
 "   - CompleteHelper/Repeat.vim autoload script
 "   - ingo/avoidprompt.vim autoload script
 "   - ingo/date.vim autoload script
+"   - ingo/msg.vim autoload script
+"   - ingo/register.vim autoload script
 "   - PrevInsertComplete/Record.vim autoload script
 "
 " Copyright: (C) 2011-2013 Ingo Karkat
@@ -13,6 +15,8 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   1.11.008	18-Nov-2013	Use ingo#register#KeepRegisterExecuteOrFunc().
+"				Use ingo#msg#ErrorMsg().
 "   1.11.007	08-Jul-2013	Move ingodate.vim into ingo-library.
 "   1.11.006	07-Jun-2013	Move EchoWithoutScrolling.vim into ingo-library.
 "   1.10.005	22-Aug-2012	Do not show relative time when the timestamp is
@@ -105,46 +109,33 @@ function! PrevInsertComplete#Recall( position, multiplier )
     let l:insertion = get(g:PrevInsertComplete_Insertions, (a:position - 1), '')
     if empty(l:insertion)
 	if len(g:PrevInsertComplete_Insertions) == 0
-	    let v:errmsg = 'No insertions yet'
+	    call ingo#msg#ErrorMsg('No insertions yet')
 	else
-	    let v:errmsg = printf('There %s only %d insertion%s in the history',
+	    call ingo#msg#ErrorMsg(printf('There %s only %d insertion%s in the history',
 	    \   len(g:PrevInsertComplete_Insertions) == 1 ? 'is' : 'are',
 	    \   len(g:PrevInsertComplete_Insertions),
 	    \   len(g:PrevInsertComplete_Insertions) == 1 ? '' : 's'
-	    \)
+	    \))
 	endif
-	echohl ErrorMsg
-	echomsg v:errmsg
-	echohl None
 
 	return
     endif
 
     " This doesn't work with special characters like <Esc>.
     "execute 'normal! a' . l:insertion . "\<Esc>"
-
-    let l:save_clipboard = &clipboard
-    set clipboard= " Avoid clobbering the selection and clipboard registers.
-    let l:save_reg = getreg('"')
-    let l:save_regmode = getregtype('"')
-    call setreg('"', l:insertion, 'v')
-    try
-	execute 'normal!' a:multiplier . 'p'
-    finally
-	call setreg('"', l:save_reg, l:save_regmode)
-	let &clipboard = l:save_clipboard
-    endtry
+    call ingo#register#KeepRegisterExecuteOrFunc(function('PrevInsertComplete#Insert'), l:insertion, a:multiplier)
 
     " Execution of the recall command counts as an insertion itself. However, we
     " do not consider the a:multiplier here.
     call PrevInsertComplete#Record#Insertion(l:insertion)
 endfunction
+function! PrevInsertComplete#Insert( insertion, multiplier )
+    call setreg('"', a:insertion, 'v')
+    execute 'normal!' a:multiplier . 'p'
+endfunction
 function! PrevInsertComplete#List()
     if len(g:PrevInsertComplete_Insertions) == 0
-	let v:errmsg = 'No insertions yet'
-	echohl ErrorMsg
-	echomsg v:errmsg
-	echohl None
+	call ingo#msg#ErrorMsg('No insertions yet')
 	return
     endif
 
