@@ -59,10 +59,11 @@ To uninstall, use the |:RmVimball| command.
 DEPENDENCIES				     *PrevInsertComplete-dependencies*
 
 - Requires Vim 7.0 or higher.
-- Requires the |ingo-library.vim| plugin (vimscript #4433), version 1.010 or
+- Requires the |ingo-library.vim| plugin (vimscript #4433), version 1.015 or
   higher.
 - Requires the |CompleteHelper.vim| plugin (vimscript #3914), version 1.11 or
   higher.
+- repeat.vim (vimscript #2136) plugin (optional)
 
 ==============================================================================
 CONFIGURATION				    *PrevInsertComplete-configuration*
@@ -108,10 +109,11 @@ IDEAS						    *PrevInsertComplete-ideas*
 HISTORY						  *PrevInsertComplete-history*
 
 1.11	RELEASEME
-- Add dependency to ingo-library (vimscript #4433).
 - Change qa mapping default to q<C-@>; I found it confusing that I could not
-  record macros into register a any more. To keep the previous mapping, use:
-  nmap qa <Plug>(PrevInsertRecall)
+  record macros into register a any more. To keep the previous mapping, use >
+  :nmap qa <Plug>(PrevInsertRecall)
+- Make recall of insertion (q<CTRL-@>, q<CTRL-A>) repeatable.
+- Add dependency to ingo-library (vimscript #4433).
 
 1.10	15-Oct-2012
 ENH: Persist recorded insertions across Vim invocations in the |viminfo| file.
