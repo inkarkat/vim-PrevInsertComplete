@@ -11,6 +11,9 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   1.11.007	18-Nov-2013	Add <Plug>(PrevInsertRecallRepeat) mapping to
+"				make recall of insertion (q<CTRL-@>, q<CTRL-A>)
+"				repeatable.
 "   1.11.006	28-Jun-2013	Change qa mapping default to q<C-@>; I found it
 "				confusing that I could not record macros into
 "				register a any more.
@@ -86,5 +89,7 @@ nnoremap <silent> <Plug>(PrevInsertList) :<C-u>call setline('.', getline('.'))<B
 if ! hasmapto('<Plug>(PrevInsertList)', 'n')
     nmap q<C-a> <Plug>(PrevInsertList)
 endif
+
+nnoremap <silent> <Plug>(PrevInsertRecallRepeat) :<C-u>call setline('.', getline('.'))<Bar>call PrevInsertComplete#DoRecall(v:count1)<CR>
 
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
