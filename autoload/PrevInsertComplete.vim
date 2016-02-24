@@ -8,6 +8,7 @@
 "   - ingo/msg.vim autoload script
 "   - ingo/register.vim autoload script
 "   - PrevInsertComplete/Record.vim autoload script
+"   - repeat.vim (vimscript #2136) autoload script (optional)
 "
 " Copyright: (C) 2011-2013 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
@@ -17,6 +18,8 @@
 " REVISION	DATE		REMARKS
 "   1.11.008	18-Nov-2013	Use ingo#register#KeepRegisterExecuteOrFunc().
 "				Use ingo#msg#ErrorMsg().
+"				Make recall of insertion (q<CTRL-@>, q<CTRL-A>)
+"				repeatable.
 "   1.11.007	08-Jul-2013	Move ingodate.vim into ingo-library.
 "   1.11.006	07-Jun-2013	Move EchoWithoutScrolling.vim into ingo-library.
 "   1.10.005	22-Aug-2012	Do not show relative time when the timestamp is
@@ -106,8 +109,8 @@ function! PrevInsertComplete#Expr()
 endfunction
 
 function! PrevInsertComplete#Recall( position, multiplier )
-    let l:insertion = get(g:PrevInsertComplete_Insertions, (a:position - 1), '')
-    if empty(l:insertion)
+    let s:insertion = get(g:PrevInsertComplete_Insertions, (a:position - 1), '')
+    if empty(s:insertion)
 	if len(g:PrevInsertComplete_Insertions) == 0
 	    call ingo#msg#ErrorMsg('No insertions yet')
 	else
@@ -117,17 +120,21 @@ function! PrevInsertComplete#Recall( position, multiplier )
 	    \   len(g:PrevInsertComplete_Insertions) == 1 ? '' : 's'
 	    \))
 	endif
-
-	return
+    else
+	call PrevInsertComplete#DoRecall( a:multiplier )
     endif
+endfunction
+function! PrevInsertComplete#DoRecall( multiplier )
 
     " This doesn't work with special characters like <Esc>.
-    "execute 'normal! a' . l:insertion . "\<Esc>"
-    call ingo#register#KeepRegisterExecuteOrFunc(function('PrevInsertComplete#Insert'), l:insertion, a:multiplier)
+    "execute 'normal! a' . s:insertion . "\<Esc>"
+    call ingo#register#KeepRegisterExecuteOrFunc(function('PrevInsertComplete#Insert'), s:insertion, a:multiplier)
 
     " Execution of the recall command counts as an insertion itself. However, we
     " do not consider the a:multiplier here.
-    call PrevInsertComplete#Record#Insertion(l:insertion)
+    call PrevInsertComplete#Record#Insertion(s:insertion)
+
+    silent! call repeat#set("\<Plug>(PrevInsertRecallRepeat)", a:multiplier)
 endfunction
 function! PrevInsertComplete#Insert( insertion, multiplier )
     call setreg('"', a:insertion, 'v')
