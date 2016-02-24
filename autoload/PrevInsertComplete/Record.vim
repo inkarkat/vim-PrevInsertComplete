@@ -10,6 +10,8 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   1.33.005	18-Dec-2013	Use ingo#text#Get() instead of
+"				CompleteHelper#ExtractText().
 "   1.11.004	18-Nov-2013	Use ingo#compat#strchars().
 "   1.10.003	01-Sep-2012	Make a:matchObj in CompleteHelper#ExtractText()
 "				optional; it's not used there, anyway.
@@ -23,7 +25,7 @@ function! s:GetInsertion()
     " range delimited by the marks '[ and '] (last one exclusive).
     let l:startPos = getpos("'[")[1:2]
     let l:endPos = [line("']"), (col("']") - 1)]
-    return CompleteHelper#ExtractText(l:startPos, l:endPos)
+    return ingo#text#Get(l:startPos, l:endPos)
 endfunction
 function! PrevInsertComplete#Record#Insertion( text )
     if a:text =~# '^\_s*$' || ingo#compat#strchars(a:text) < g:PrevInsertComplete_MinLength
