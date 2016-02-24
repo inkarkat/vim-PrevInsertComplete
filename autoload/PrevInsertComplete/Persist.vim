@@ -1,13 +1,15 @@
 " PrevInsertComplete/Persist.vim: Persistence of previous insertions across Vim sessions.
 "
 " DEPENDENCIES:
+"   - ingo/msg.vim autoload script
 "
-" Copyright: (C) 2012 Ingo Karkat
+" Copyright: (C) 2012-2014 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   1.11.002	28-Apr-2014	Minor: Use ingo#msg#ErrorMsg().
 "   1.10.001	22-Aug-2012	file creation
 
 function! PrevInsertComplete#Persist#Load()
@@ -16,12 +18,8 @@ function! PrevInsertComplete#Persist#Load()
 	    " Persistent global variables cannot be of type List, so we actually
 	    " store the string representation, and eval() it back to a List.
 	    execute 'let g:PrevInsertComplete_Insertions =' g:PREV_INSERTIONS
-	catch /^Vim\%((\a\+)\)\=:E/
-	    let v:errmsg = 'Corrupted persistent insertion history in g:PREV_INSERTIONS'
-	    echohl ErrorMsg
-	    echomsg v:errmsg
-	    echohl None
-
+	catch /^Vim\%((\a\+)\)\=:/
+	    call ingo#msg#ErrorMsg('Corrupted persistent insertion history in g:PREV_INSERTIONS')
 	    unlet! g:PREV_INSERTIONS
 	    unlet! g:PREV_INSERTION_TIMES
 
@@ -31,7 +29,7 @@ function! PrevInsertComplete#Persist#Load()
 	if exists('g:PREV_INSERTION_TIMES')
 	    try
 		execute 'let g:PrevInsertComplete_InsertionTimes =' g:PREV_INSERTION_TIMES
-	    catch /^Vim\%((\a\+)\)\=:E/
+	    catch /^Vim\%((\a\+)\)\=:/
 		" Just ignore the insertion dates when they are corrupted.
 		let g:PrevInsertComplete_InsertionTimes = repeat(0, len(g:PrevInsertComplete_Insertions))
 	    endtry
