@@ -108,12 +108,13 @@ IDEAS						    *PrevInsertComplete-ideas*
 ==============================================================================
 HISTORY						  *PrevInsertComplete-history*
 
-1.11	RELEASEME
+1.11	29-Nov-2013
 - Change qa mapping default to q<C-@>; I found it confusing that I could not
   record macros into register a any more. To keep the previous mapping, use >
   :nmap qa <Plug>(PrevInsertRecall)
 - Make recall of insertion (q<CTRL-@>, q<CTRL-A>) repeatable.
-- Add dependency to ingo-library (vimscript #4433).
+- Add dependency to ingo-library (vimscript #4433). *** You need to separately
+  install ingo-library (vimscript #4433) version 1.015 (or higher)! ***
 
 1.10	15-Oct-2012
 ENH: Persist recorded insertions across Vim invocations in the |viminfo| file.
