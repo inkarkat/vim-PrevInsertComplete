@@ -1,4 +1,3 @@
-autoload/ingodate.vim
 autoload/PrevInsertComplete.vim
 autoload/PrevInsertComplete/Persist.vim
 autoload/PrevInsertComplete/Record.vim
