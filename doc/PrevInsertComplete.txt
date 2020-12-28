@@ -48,10 +48,16 @@ CTRL-X CTRL-A		Find previous insertions (|i_CTRL-A|, |quote.|) whose
 ==============================================================================
 INSTALLATION				     *PrevInsertComplete-installation*
 
-This script is packaged as a |vimball|. If you have the "gunzip" decompressor
-in your PATH, simply edit the *.vmb.gz package in Vim; otherwise, decompress
-the archive first, e.g. using WinZip. Inside Vim, install by sourcing the
-vimball or via the |:UseVimball| command. >
+The code is hosted in a Git repo at
+    https://github.com/inkarkat/vim-PrevInsertComplete
+You can use your favorite plugin manager, or "git clone" into a directory used
+for Vim |packages|. Releases are on the "stable" branch, the latest unstable
+development snapshot on "master".
+
+This script is also packaged as a |vimball|. If you have the "gunzip"
+decompressor in your PATH, simply edit the *.vmb.gz package in Vim; otherwise,
+decompress the archive first, e.g. using WinZip. Inside Vim, install by
+sourcing the vimball or via the |:UseVimball| command. >
     vim PrevInsertComplete*.vmb.gz
     :so %
 To uninstall, use the |:RmVimball| command.
@@ -105,8 +111,18 @@ TODO						     *PrevInsertComplete-todo*
 
 IDEAS						    *PrevInsertComplete-ideas*
 
+CONTRIBUTING				       *PrevInsertComplete-contribute*
+
+Report any bugs, send patches, or suggest features via the issue tracker at
+https://github.com/inkarkat/vim-PrevInsertComplete/issues or email (address
+below).
+
 ==============================================================================
 HISTORY						  *PrevInsertComplete-history*
+
+1.12	28-Dec-2020
+- BUG: "E899: Argument of insert() must be a List or Blob" in
+  PrevInsertComplete#Record#Insertion().
 
 1.11	29-Nov-2013
 - Change qa mapping default to q<C-@>; I found it confusing that I could not
@@ -128,7 +144,7 @@ Initial release.
 Started development.
 
 ==============================================================================
-Copyright: (C) 2011-2013 Ingo Karkat
+Copyright: (C) 2011-2020 Ingo Karkat
 The VIM LICENSE applies to this plugin; see |copyright|.
 
 Maintainer:	Ingo Karkat <ingo@karkat.de>
