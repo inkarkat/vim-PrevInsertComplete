@@ -109,7 +109,7 @@ below).
 HISTORY
 ------------------------------------------------------------------------------
 
-##### 1.12    RELEASEME
+##### 1.12    28-Dec-2020
 - BUG: "E899: Argument of insert() must be a List or Blob" in
   PrevInsertComplete#Record#Insertion().
 
