@@ -2,31 +2,11 @@
 "
 " DEPENDENCIES:
 "   - Requires Vim 7.0 or higher.
-"   - PrevInsertComplete.vim autoload script.
-"   - PrevInsertComplete/Record.vim autoload script.
 "
-" Copyright: (C) 2011-2013 Ingo Karkat
+" Copyright: (C) 2011-2020 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
-"
-" REVISION	DATE		REMARKS
-"   1.11.007	18-Nov-2013	Add <Plug>(PrevInsertRecallRepeat) mapping to
-"				make recall of insertion (q<CTRL-@>, q<CTRL-A>)
-"				repeatable.
-"   1.11.006	28-Jun-2013	Change qa mapping default to q<C-@>; I found it
-"				confusing that I could not record macros into
-"				register a any more.
-"   1.10.005	24-Aug-2012	CHG: Reduce default
-"				g:PrevInsertComplete_MinLength from 10 to 6.
-"				FIX: Handle 'readonly' and 'nomodifiable'
-"				buffers without function errors.
-"   1.00.004	22-Aug-2012	Minor cleanup to prepare for publishing.
-"	003	09-Nov-2011	FIX: Avoid hit-enter prompt after q<CTRL-A>.
-"				Split off autoload script and documentation.
-"	002	10-Oct-2011	Implement repetition with following history
-"				items.
-"	001	06-Oct-2011	file creation
 
 " Avoid installing twice or when in unsupported Vim version.
 if exists('g:loaded_PrevInsertComplete') || (v:version < 700)

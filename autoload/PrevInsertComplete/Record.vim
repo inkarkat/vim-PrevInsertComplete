@@ -1,22 +1,12 @@
 " PrevInsertComplete/Record.vim: Recording of inserted text.
 "
 " DEPENDENCIES:
-"   - CompleteHelper.vim autoload script
-"   - ingo/compat.vim autoload script
+"   - ingo-library.vim plugin
 "
-" Copyright: (C) 2011-2013 Ingo Karkat
+" Copyright: (C) 2011-2020 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
-"
-" REVISION	DATE		REMARKS
-"   1.33.005	18-Dec-2013	Use ingo#text#Get() instead of
-"				CompleteHelper#ExtractText().
-"   1.11.004	18-Nov-2013	Use ingo#compat#strchars().
-"   1.10.003	01-Sep-2012	Make a:matchObj in CompleteHelper#ExtractText()
-"				optional; it's not used there, anyway.
-"   1.00.002	22-Aug-2012	Minor cleanup to prepare for publishing.
-"	001	09-Nov-2011	file creation from plugin/PrevInsertComplete.vim.
 
 function! s:GetInsertion()
     " Unfortunately, we cannot simply use register "., because it contains all

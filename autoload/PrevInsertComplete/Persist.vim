@@ -1,16 +1,12 @@
 " PrevInsertComplete/Persist.vim: Persistence of previous insertions across Vim sessions.
 "
 " DEPENDENCIES:
-"   - ingo/msg.vim autoload script
+"   - ingo-library.vim plugin
 "
 " Copyright: (C) 2012-2020 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
-"
-" REVISION	DATE		REMARKS
-"   1.11.002	28-Apr-2014	Minor: Use ingo#msg#ErrorMsg().
-"   1.10.001	22-Aug-2012	file creation
 
 function! PrevInsertComplete#Persist#Load()
     if exists('g:PREV_INSERTIONS')
