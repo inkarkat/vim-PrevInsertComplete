@@ -1,38 +1,14 @@
 " PrevInsertComplete.vim: Recall and insert mode completion for previously inserted text.
 "
 " DEPENDENCIES:
-"   - CompleteHelper/Abbreviate.vim autoload script
-"   - CompleteHelper/Repeat.vim autoload script
-"   - ingo/avoidprompt.vim autoload script
-"   - ingo/date.vim autoload script
-"   - ingo/msg.vim autoload script
-"   - ingo/register.vim autoload script
-"   - PrevInsertComplete/Record.vim autoload script
-"   - repeat.vim (vimscript #2136) autoload script (optional)
+"   - CompleteHelper.vim plugin
+"   - ingo-library.vim plugin
+"   - repeat.vim (vimscript #2136) plugin (optional)
 "
-" Copyright: (C) 2011-2013 Ingo Karkat
+" Copyright: (C) 2011-2020 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
-"
-" REVISION	DATE		REMARKS
-"   1.11.008	18-Nov-2013	Use ingo#register#KeepRegisterExecuteOrFunc().
-"				Use ingo#msg#ErrorMsg().
-"				Make recall of insertion (q<CTRL-@>, q<CTRL-A>)
-"				repeatable.
-"   1.11.007	08-Jul-2013	Move ingodate.vim into ingo-library.
-"   1.11.006	07-Jun-2013	Move EchoWithoutScrolling.vim into ingo-library.
-"   1.10.005	22-Aug-2012	Do not show relative time when the timestamp is
-"				invalid (i.e. negative or zero). This is better
-"				when the g:PrevInsertComplete_InsertionTimes
-"				somehow wasn't persisted.
-"   1.00.004	21-Aug-2012	Minor: Reduce initial indent in list; :marks and
-"				:jumps have little indent, too.
-"	003	05-May-2012	Move dependency from CompleteHelper.vim to
-"				CompleteHelper/Abbreviate.vim script broken out
-"				in version 1.01.
-"	002	23-Mar-2012	No need for inputsave() around getchar().
-"	001	09-Nov-2011	file creation from plugin/PrevInsertComplete.vim.
 let s:save_cpo = &cpo
 set cpo&vim
 
