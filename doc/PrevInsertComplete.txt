@@ -120,6 +120,10 @@ below).
 ==============================================================================
 HISTORY						  *PrevInsertComplete-history*
 
+1.12	RELEASEME
+- BUG: "E899: Argument of insert() must be a List or Blob" in
+  PrevInsertComplete#Record#Insertion().
+
 1.11	29-Nov-2013
 - Change qa mapping default to q<C-@>; I found it confusing that I could not
   record macros into register a any more. To keep the previous mapping, use >

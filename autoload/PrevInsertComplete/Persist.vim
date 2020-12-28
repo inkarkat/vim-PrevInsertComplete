@@ -3,7 +3,7 @@
 " DEPENDENCIES:
 "   - ingo/msg.vim autoload script
 "
-" Copyright: (C) 2012-2014 Ingo Karkat
+" Copyright: (C) 2012-2020 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
@@ -31,11 +31,11 @@ function! PrevInsertComplete#Persist#Load()
 		execute 'let g:PrevInsertComplete_InsertionTimes =' g:PREV_INSERTION_TIMES
 	    catch /^Vim\%((\a\+)\)\=:/
 		" Just ignore the insertion dates when they are corrupted.
-		let g:PrevInsertComplete_InsertionTimes = repeat(0, len(g:PrevInsertComplete_Insertions))
+		let g:PrevInsertComplete_InsertionTimes = repeat([0], len(g:PrevInsertComplete_Insertions))
 	    endtry
 	else
 	    " Somehow, the insertion dates weren't persisted. So what.
-	    let g:PrevInsertComplete_InsertionTimes = repeat(0, len(g:PrevInsertComplete_Insertions))
+	    let g:PrevInsertComplete_InsertionTimes = repeat([0], len(g:PrevInsertComplete_Insertions))
 	endif
 
 	" Free the memory occupied by the persistence variables. They will be
