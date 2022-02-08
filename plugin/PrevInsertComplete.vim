@@ -65,11 +65,15 @@ nnoremap <silent> <Plug>(PrevInsertRecall) :<C-u>call setline('.', getline('.'))
 if ! hasmapto('<Plug>(PrevInsertRecall)', 'n')
     nmap q<A-a> <Plug>(PrevInsertRecall)
 endif
-nnoremap <silent> <Plug>(PrevInsertList) :<C-u>call setline('.', getline('.'))<Bar>if ! PrevInsertComplete#Recall#List(v:count1, v:register)<Bar>echoerr ingo#err#Get()<Bar>endif<CR>
+nnoremap <silent> <Plug>(PrevInsertList)
+\ :<C-u>if !&ma<Bar><Bar>&ro<Bar>call setline('.', getline('.'))<Bar>endif<Bar>
+\if ! PrevInsertComplete#Recall#List(v:count1, v:register)<Bar>echoerr ingo#err#Get()<Bar>endif<CR>
 if ! hasmapto('<Plug>(PrevInsertList)', 'n')
     nmap q<C-a> <Plug>(PrevInsertList)
 endif
 
-nnoremap <silent> <Plug>(PrevInsertRecallRepeat) :<C-u>call setline('.', getline('.'))<Bar>if ! PrevInsertComplete#Recall#RecallRepeat(v:count1, v:register)<Bar>echoerr ingo#err#Get()<Bar>endif<CR>
+nnoremap <silent> <Plug>(PrevInsertRecallRepeat)
+\ :<C-u>if !&ma<Bar><Bar>&ro<Bar>call setline('.', getline('.'))<Bar>endif<Bar>
+\if ! PrevInsertComplete#Recall#RecallRepeat(v:count1, v:register)<Bar>echoerr ingo#err#Get()<Bar>endif<CR>
 
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
