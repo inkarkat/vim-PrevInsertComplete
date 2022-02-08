@@ -39,8 +39,8 @@ CTRL-X CTRL-A		Find previous insertions (|i_CTRL-A|, |quote.|) whose
 			results, it may match anywhere.
 			Further use of CTRL-X CTRL-A will append insertions done
 			after the previous recall.
-								    *q_CTRL-@*
-[count]q<CTRL-@>	Recall and append previous [count]'th insertion.
+								     *q_ALT-A*
+[count]q<ALT-A>		Recall and append previous [count]'th insertion.
 								    *q_CTRL-A*
 [count]q<CTRL-A>	Lists the last 9 insertions, then prompts for a number.
 			The chosen insertion is appended [count] times.
@@ -120,6 +120,11 @@ below).
 ==============================================================================
 HISTORY						  *PrevInsertComplete-history*
 
+1.13	RELEASEME
+- CHG: q<C-@> direct recall mapping is broken in GVIM 8.2 (cp.
+  https://github.com/vim/vim/issues/6457#issuecomment-658960270); choose
+  different q<A-a> default to avoid these issues.
+
 1.12	28-Dec-2020
 - BUG: "E899: Argument of insert() must be a List or Blob" in
   PrevInsertComplete#Record#Insertion().
@@ -144,7 +149,7 @@ Initial release.
 Started development.
 
 ==============================================================================
-Copyright: (C) 2011-2020 Ingo Karkat
+Copyright: (C) 2011-2022 Ingo Karkat
 The VIM LICENSE applies to this plugin; see |copyright|.
 
 Maintainer:	Ingo Karkat <ingo@karkat.de>

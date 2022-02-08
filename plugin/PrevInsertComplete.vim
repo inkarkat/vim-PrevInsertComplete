@@ -3,7 +3,7 @@
 " DEPENDENCIES:
 "   - Requires Vim 7.0 or higher.
 "
-" Copyright: (C) 2011-2020 Ingo Karkat
+" Copyright: (C) 2011-2022 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
@@ -63,7 +63,7 @@ endif
 
 nnoremap <silent> <Plug>(PrevInsertRecall) :<C-u>call setline('.', getline('.'))<Bar>call PrevInsertComplete#Recall(v:count1, 1)<CR>
 if ! hasmapto('<Plug>(PrevInsertRecall)', 'n')
-    nmap q<C-@> <Plug>(PrevInsertRecall)
+    nmap q<A-a> <Plug>(PrevInsertRecall)
 endif
 nnoremap <silent> <Plug>(PrevInsertList) :<C-u>call setline('.', getline('.'))<Bar>call PrevInsertComplete#List()<CR>
 if ! hasmapto('<Plug>(PrevInsertList)', 'n')

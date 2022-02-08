@@ -31,7 +31,7 @@ USAGE
                             Further use of CTRL-X CTRL-A will append insertions done
                             after the previous recall.
 
-    [count]q<CTRL-@>        Recall and append previous [count]'th insertion.
+    [count]q<ALT-A>         Recall and append previous [count]'th insertion.
 
     [count]q<CTRL-A>        Lists the last 9 insertions, then prompts for a number.
                             The chosen insertion is appended [count] times.
@@ -109,6 +109,11 @@ below).
 HISTORY
 ------------------------------------------------------------------------------
 
+##### 1.13    RELEASEME
+- CHG: q&lt;C-@&gt; direct recall mapping is broken in GVIM 8.2 (cp.
+  https://github.com/vim/vim/issues/6457#issuecomment-658960270); choose
+  different q&lt;A-a&gt; default to avoid these issues.
+
 ##### 1.12    28-Dec-2020
 - BUG: "E899: Argument of insert() must be a List or Blob" in
   PrevInsertComplete#Record#Insertion().
@@ -138,7 +143,7 @@ configuration.
 - Started development.
 
 ------------------------------------------------------------------------------
-Copyright: (C) 2011-2020 Ingo Karkat -
+Copyright: (C) 2011-2022 Ingo Karkat -
 The [VIM LICENSE](http://vimdoc.sourceforge.net/htmldoc/uganda.html#license) applies to this plugin.
 
 Maintainer:     Ingo Karkat &lt;ingo@karkat.de&gt;
