@@ -65,7 +65,7 @@ nnoremap <silent> <Plug>(PrevInsertRecall) :<C-u>call setline('.', getline('.'))
 if ! hasmapto('<Plug>(PrevInsertRecall)', 'n')
     nmap q<A-a> <Plug>(PrevInsertRecall)
 endif
-nnoremap <silent> <Plug>(PrevInsertList) :<C-u>call setline('.', getline('.'))<Bar>call PrevInsertComplete#List()<CR>
+nnoremap <silent> <Plug>(PrevInsertList) :<C-u>call setline('.', getline('.'))<Bar>call PrevInsertComplete#List(v:count1)<CR>
 if ! hasmapto('<Plug>(PrevInsertList)', 'n')
     nmap q<C-a> <Plug>(PrevInsertList)
 endif

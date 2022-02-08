@@ -5,7 +5,7 @@
 "   - ingo-library.vim plugin
 "   - repeat.vim (vimscript #2136) plugin (optional)
 "
-" Copyright: (C) 2011-2020 Ingo Karkat
+" Copyright: (C) 2011-2022 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
@@ -116,7 +116,7 @@ function! PrevInsertComplete#Insert( insertion, multiplier )
     call setreg('"', a:insertion, 'v')
     execute 'normal!' a:multiplier . 'p'
 endfunction
-function! PrevInsertComplete#List()
+function! PrevInsertComplete#List( multiplier )
     if len(g:PrevInsertComplete_Insertions) == 0
 	call ingo#msg#ErrorMsg('No insertions yet')
 	return
@@ -132,7 +132,7 @@ function! PrevInsertComplete#List()
     let l:choice = nr2char(getchar())
     if l:choice =~# '\d'
 	redraw	" Somehow need this to avoid the hit-enter prompt.
-	call PrevInsertComplete#Recall(l:choice, v:count1)
+	call PrevInsertComplete#Recall(l:choice, a:multiplier)
     endif
 endfunction
 
