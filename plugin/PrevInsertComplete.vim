@@ -61,7 +61,7 @@ if ! hasmapto('<Plug>(PrevInsertComplete)', 'i')
     imap <C-x><C-a> <Plug>(PrevInsertComplete)
 endif
 
-nnoremap <silent> <Plug>(PrevInsertRecall) :<C-u>call setline('.', getline('.'))<Bar>if ! PrevInsertComplete#Recall#Recall(v:count1, 1)<Bar>echoerr ingo#err#Get()<Bar>endif<CR>
+nnoremap <silent> <Plug>(PrevInsertRecall) :<C-u>call setline('.', getline('.'))<Bar>if ! PrevInsertComplete#Recall#Recall(v:count1, v:register)<Bar>echoerr ingo#err#Get()<Bar>endif<CR>
 if ! hasmapto('<Plug>(PrevInsertRecall)', 'n')
     nmap q<A-a> <Plug>(PrevInsertRecall)
 endif
@@ -70,6 +70,6 @@ if ! hasmapto('<Plug>(PrevInsertList)', 'n')
     nmap q<C-a> <Plug>(PrevInsertList)
 endif
 
-nnoremap <silent> <Plug>(PrevInsertRecallRepeat) :<C-u>call setline('.', getline('.'))<Bar>call PrevInsertComplete#Recall#Do(v:count1)<CR>
+nnoremap <silent> <Plug>(PrevInsertRecallRepeat) :<C-u>call setline('.', getline('.'))<Bar>if ! PrevInsertComplete#Recall#RecallRepeat(v:count1, v:register)<Bar>echoerr ingo#err#Get()<Bar>endif<CR>
 
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :

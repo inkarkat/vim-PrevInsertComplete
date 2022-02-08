@@ -41,9 +41,19 @@ CTRL-X CTRL-A		Find previous insertions (|i_CTRL-A|, |quote.|) whose
 			after the previous recall.
 								     *q_ALT-A*
 [count]q<ALT-A>		Recall and append previous [count]'th insertion.
+[count]"{1-9}q<ALT-A>	Recall and append the insertion that was recalled last
+			(1), second-to-last (2), etc. [count] times.
+[count]"{a-zA-Z}q<ALT-A>
+			Recall and append the insertion named {a-zA-Z} by
+			invoking the |q_CTRL-A| mapping.
 								    *q_CTRL-A*
-[count]q<CTRL-A>	Lists the last 9 insertions, then prompts for a number.
-			The chosen insertion is appended [count] times.
+[count]q<CTRL-A>	Lists the last 9 insertions, last 9 recalled
+			insertions, and any named {a-zA-Z} insertions, then
+			prompts to choose one.
+			That chosen insertion is appended [count] times.
+[count]"{a-zA-Z}q<CTRL-A>
+			Like above, but name the chosen insertion as {a-zA-Z}
+			for a recall.
 
 ==============================================================================
 INSTALLATION				     *PrevInsertComplete-installation*
