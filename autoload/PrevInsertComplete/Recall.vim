@@ -44,6 +44,16 @@ function! PrevInsertComplete#Recall#Recall( count, register )
     elseif a:register =~# '[1-9]'
 	let l:multiplier = a:count
 	let s:insertion = s:recalledInsertions[str2nr(a:register) - 1]
+	let l:what = '"' . a:register . "\n" . s:insertion
+	if a:register ==# '1'
+	    " Put any recalled insertion other that the last recall itself back
+	    " at the top, even if the last recalled insertion was the same one.
+	    " This creates a "cycling" effect so that one can use "3q<A-a> or
+	    " q<C-a>"3 to recall the third-to-last element, and subsequent
+	    " repeats will recall the second-to-last, last, and then again
+	    " 3-2-1-3-2-1-...
+	    let s:recalledWhat = ''
+	endif
     elseif has_key(s:namedInsertions, a:register)
 	let l:multiplier = a:count
 	let s:insertion = s:namedInsertions[a:register]
