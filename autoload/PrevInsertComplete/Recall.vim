@@ -16,16 +16,18 @@ function! PrevInsertComplete#Recall#Recall( position, multiplier )
     let s:insertion = get(g:PrevInsertComplete_Insertions, (a:position - 1), '')
     if empty(s:insertion)
 	if len(g:PrevInsertComplete_Insertions) == 0
-	    call ingo#msg#ErrorMsg('No insertions yet')
+	    call ingo#err#Set('No insertions yet')
 	else
-	    call ingo#msg#ErrorMsg(printf('There %s only %d insertion%s in the history',
+	    call ingo#err#Set(printf('There %s only %d insertion%s in the history',
 	    \   len(g:PrevInsertComplete_Insertions) == 1 ? 'is' : 'are',
 	    \   len(g:PrevInsertComplete_Insertions),
 	    \   len(g:PrevInsertComplete_Insertions) == 1 ? '' : 's'
 	    \))
 	endif
+	return 0
     else
-	call PrevInsertComplete#Recall#Do( a:multiplier )
+	call PrevInsertComplete#Recall#Do(a:multiplier)
+	return 1
     endif
 endfunction
 function! PrevInsertComplete#Recall#Do( multiplier )
@@ -46,8 +48,8 @@ function! PrevInsertComplete#Recall#Insert( insertion, multiplier )
 endfunction
 function! PrevInsertComplete#Recall#List( multiplier )
     if len(g:PrevInsertComplete_Insertions) == 0
-	call ingo#msg#ErrorMsg('No insertions yet')
-	return
+	call ingo#err#Set('No insertions yet')
+	return 0
     endif
 
     echohl Title
@@ -62,6 +64,7 @@ function! PrevInsertComplete#Recall#List( multiplier )
 	redraw	" Somehow need this to avoid the hit-enter prompt.
 	call PrevInsertComplete#Recall#Recall(l:choice, a:multiplier)
     endif
+    return 1
 endfunction
 
 let &cpo = s:save_cpo
