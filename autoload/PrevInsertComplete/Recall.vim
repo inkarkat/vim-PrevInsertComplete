@@ -26,7 +26,7 @@ endfunction
 function! PrevInsertComplete#Recall#Recall( count, register )
     if ! s:HasName(a:register)
 	let l:multiplier = 1
-	let s:insertion = get(g:PrevInsertComplete_Insertions, l:what, '')
+	let s:insertion = get(g:PrevInsertComplete_Insertions, a:count - 1, '')
 
 	if empty(s:insertion)
 	    if len(g:PrevInsertComplete_Insertions) == 0
