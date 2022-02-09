@@ -36,37 +36,37 @@ function! PrevInsertComplete#Recall#RecallRepeat( count, repeatCount, register )
 endfunction
 function! PrevInsertComplete#Recall#Recall( count, repeatCount, register )
     if ! s:HasName(a:register)
-	let l:multiplier = 1
-	let s:insertion = get(g:PrevInsertComplete_Insertions, a:count - 1, '')
-
-	if empty(s:insertion)
-	    if len(g:PrevInsertComplete_Insertions) == 0
-		call ingo#err#Set('No insertions yet')
-	    else
-		call ingo#err#Set(printf('There %s only %d insertion%s in the history',
-		\   len(g:PrevInsertComplete_Insertions) == 1 ? 'is' : 'are',
-		\   len(g:PrevInsertComplete_Insertions),
-		\   len(g:PrevInsertComplete_Insertions) == 1 ? '' : 's'
-		\))
-	    endif
+	if len(g:PrevInsertComplete_Insertions) == 0
+	    call ingo#err#Set('No insertions yet')
+	    return 0
+	elseif len(g:PrevInsertComplete_Insertions) < a:count
+	    call ingo#err#Set(printf('There %s only %d insertion%s in the history',
+	    \   len(g:PrevInsertComplete_Insertions) == 1 ? 'is' : 'are',
+	    \   len(g:PrevInsertComplete_Insertions),
+	    \   len(g:PrevInsertComplete_Insertions) == 1 ? '' : 's'
+	    \))
 	    return 0
 	endif
+
+	let l:multiplier = 1
+	let s:insertion = g:PrevInsertComplete_Insertions[a:count - 1]
 	let l:what = (a:count - 1) . "\n" . s:insertion
     elseif a:register =~# '[1-9]'
-	let l:multiplier = a:count
-	let s:insertion = get(s:recalledInsertions, str2nr(a:register) - 1, '')
-	if empty(s:insertion)
-	    if len(s:recalledInsertions) == 0
-		call ingo#err#Set('No recalled insertions yet')
-	    else
-		call ingo#err#Set(printf('There %s only %d recalled insertion%s',
-		\   len(s:recalledInsertions) == 1 ? 'is' : 'are',
-		\   len(s:recalledInsertions),
-		\   len(s:recalledInsertions) == 1 ? '' : 's'
-		\))
-	    endif
+	let l:index = str2nr(a:register) - 1
+	if len(s:recalledInsertions) == 0
+	    call ingo#err#Set('No recalled insertions yet')
+	    return 0
+	elseif len(s:recalledInsertions) <= l:index
+	    call ingo#err#Set(printf('There %s only %d recalled insertion%s',
+	    \   len(s:recalledInsertions) == 1 ? 'is' : 'are',
+	    \   len(s:recalledInsertions),
+	    \   len(s:recalledInsertions) == 1 ? '' : 's'
+	    \))
 	    return 0
 	endif
+
+	let l:multiplier = a:count
+	let s:insertion = s:recalledInsertions[l:index]
 	let l:what = '"' . a:register . "\n" . s:insertion
 	if a:register ==# '1'
 	    " Put any recalled insertion other that the last recall itself back
