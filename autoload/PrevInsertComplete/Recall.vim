@@ -54,7 +54,7 @@ function! PrevInsertComplete#Recall#Recall( count, repeatCount, register )
 
 	let l:multiplier = 1
 	let s:insertion = g:PrevInsertComplete#Insertions[a:count - 1]
-	let l:what = (a:count - 1) . "\n" . s:insertion
+	let l:recallIdentity = (a:count - 1) . "\n" . s:insertion
     elseif a:register =~# '[1-9]'
 	let l:index = str2nr(a:register) - 1
 	if len(g:PrevInsertComplete#Recall#RecalledInsertions) == 0
@@ -71,7 +71,7 @@ function! PrevInsertComplete#Recall#Recall( count, repeatCount, register )
 
 	let l:multiplier = a:count
 	let s:insertion = g:PrevInsertComplete#Recall#RecalledInsertions[l:index]
-	let l:what = '"' . a:register . "\n" . s:insertion
+	let l:recallIdentity = '"' . a:register . "\n" . s:insertion
 	if a:register ==# '1'
 	    " Put any recalled insertion other that the last recall itself back
 	    " at the top, even if the last recalled insertion was the same one.
@@ -84,7 +84,7 @@ function! PrevInsertComplete#Recall#Recall( count, repeatCount, register )
     elseif has_key(g:PrevInsertComplete#Recall#NamedInsertions, a:register)
 	let l:multiplier = a:count
 	let s:insertion = g:PrevInsertComplete#Recall#NamedInsertions[a:register]
-	let l:what = '"' . a:register . "\n" . s:insertion
+	let l:recallIdentity = '"' . a:register . "\n" . s:insertion
     else
 	call ingo#err#Set(a:register =~# '[a-zA-Z]' ?
 	\   printf('Nothing named "%s yet', a:register) :
@@ -93,18 +93,18 @@ function! PrevInsertComplete#Recall#Recall( count, repeatCount, register )
 	return 0
     endif
 
-    call s:Recall(l:what, a:repeatCount, a:register, l:multiplier)
+    call s:Recall(l:recallIdentity, a:repeatCount, a:register, l:multiplier)
     return 1
 endfunction
-function! s:Recall( what, repeatCount, register, multiplier )
-    if ! empty(a:what) && a:what !=# s:recalledWhat
+function! s:Recall( recallIdentity, repeatCount, register, multiplier )
+    if ! empty(a:recallIdentity) && a:recallIdentity !=# s:recalledWhat
 	" It's not a repeat of the last recalled thing; put it at the first
 	" position of the recall stack.
 	call insert(g:PrevInsertComplete#Recall#RecalledInsertions, s:insertion)
 	if len(g:PrevInsertComplete#Recall#RecalledInsertions) > 9
 	    call remove(g:PrevInsertComplete#Recall#RecalledInsertions, 9, -1)
 	endif
-	let s:recalledWhat = a:what
+	let s:recalledWhat = a:recallIdentity
     endif
 
     " This doesn't work with special characters like <Esc>.
@@ -146,7 +146,7 @@ function! PrevInsertComplete#Recall#List( multiplier, register )
     let l:validNamesAndRecalls = join(l:validNames, '') . join(range(1, l:recalledNum), '')
     echo printf('Type number%s (<Enter> cancels) to insert%s: ', (empty(l:validNamesAndRecalls) ? '' : ' or "{name}'), (l:hasName ? ' and assign to "' . a:register : ''))
     let l:choice = ingo#query#get#ValidChar({'validExpr': "[123456789\<CR>" . (empty(l:validNamesAndRecalls) ? '' : '"' . l:validNamesAndRecalls) . ']'})
-    let l:what = ''
+    let l:recallIdentity = ''
     let l:repeatCount = a:multiplier
     if empty(l:choice) || l:choice ==# "\<CR>"
 	return 1
@@ -161,14 +161,14 @@ function! PrevInsertComplete#Recall#List( multiplier, register )
 	    if l:choice !=# '1'
 		" Put any recalled insertion other that the last recall itself
 		" back at the top.
-		let l:what = '"' . l:choice . "\n" . s:insertion
+		let l:recallIdentity = '"' . l:choice . "\n" . s:insertion
 	    endif
 	elseif l:choice =~# '\a'
 	    let s:insertion = g:PrevInsertComplete#Recall#NamedInsertions[l:choice]
 	    let l:repeatRegister = l:choice
 	    " Don't put the same name and identical contents at the top again if
 	    " it's already there.
-	    let l:what = '"' . l:choice . "\n" . s:insertion
+	    let l:recallIdentity = '"' . l:choice . "\n" . s:insertion
 	else
 	    throw 'ASSERT: Unexpected l:choice: ' . l:choice
 	endif
@@ -182,13 +182,13 @@ function! PrevInsertComplete#Recall#List( multiplier, register )
 	let s:insertion = g:PrevInsertComplete#Insertions[str2nr(l:choice) - 1]
 	" Don't put the same count and identical contents at the top again if
 	" it's already there.
-	let l:what = l:choice . "\n" . s:insertion
+	let l:recallIdentity = l:choice . "\n" . s:insertion
     elseif l:choice =~# '\a'  | " Take {a-zA-Z} as a shortcut for "{a-zA-z}; unlike with the {1-9} recalled insertions, there's no clash here.
 	let l:repeatRegister = l:choice
 	let s:insertion = g:PrevInsertComplete#Recall#NamedInsertions[l:choice]
 	" Don't put the same name and identical contents at the top again if
 	" it's already there.
-	let l:what = '"' . l:choice . "\n" . s:insertion
+	let l:recallIdentity = '"' . l:choice . "\n" . s:insertion
     else
 	throw 'ASSERT: Unexpected l:choice: ' . l:choice
     endif
@@ -197,7 +197,7 @@ function! PrevInsertComplete#Recall#List( multiplier, register )
 	let g:PrevInsertComplete#Recall#NamedInsertions[a:register] = s:insertion
     endif
 
-    call s:Recall(l:what, l:repeatCount, l:repeatRegister, a:multiplier)
+    call s:Recall(l:recallIdentity, l:repeatCount, l:repeatRegister, a:multiplier)
     return 1
 endfunction
 
