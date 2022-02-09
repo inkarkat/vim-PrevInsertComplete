@@ -54,7 +54,19 @@ function! PrevInsertComplete#Recall#Recall( count, repeatCount, register )
 	let l:what = (a:count - 1) . "\n" . s:insertion
     elseif a:register =~# '[1-9]'
 	let l:multiplier = a:count
-	let s:insertion = s:recalledInsertions[str2nr(a:register) - 1]
+	let s:insertion = get(s:recalledInsertions, str2nr(a:register) - 1, '')
+	if empty(s:insertion)
+	    if len(s:recalledInsertions) == 0
+		call ingo#err#Set('No recalled insertions yet')
+	    else
+		call ingo#err#Set(printf('There %s only %d recalled insertion%s',
+		\   len(s:recalledInsertions) == 1 ? 'is' : 'are',
+		\   len(s:recalledInsertions),
+		\   len(s:recalledInsertions) == 1 ? '' : 's'
+		\))
+	    endif
+	    return 0
+	endif
 	let l:what = '"' . a:register . "\n" . s:insertion
 	if a:register ==# '1'
 	    " Put any recalled insertion other that the last recall itself back
