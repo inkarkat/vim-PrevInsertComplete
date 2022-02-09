@@ -18,12 +18,14 @@ let s:recalledWhat = ''
 function! s:HasName( register ) abort
     return (a:register !=# ingo#register#Default())
 endfunction
-function! PrevInsertComplete#Recall#RecallRepeat( count, register )
+function! PrevInsertComplete#Recall#RecallRepeat( count, repeatCount, register )
     " Reset the count if the actual register differs from the original register,
     " as count may be the last insertion number or the multiplier.
-    return PrevInsertComplete#Recall#Recall(g:repeat_reg[1] ==# a:register ? a:count : 1, a:register)
+    let [l:count, l:repeatCount] = (g:repeat_reg[1] ==# a:register ? [a:count, a:repeatCount] : [1, 0])
+
+    return PrevInsertComplete#Recall#Recall(l:count, l:repeatCount, a:register)
 endfunction
-function! PrevInsertComplete#Recall#Recall( count, register )
+function! PrevInsertComplete#Recall#Recall( count, repeatCount, register )
     if ! s:HasName(a:register)
 	let l:multiplier = 1
 	let s:insertion = get(g:PrevInsertComplete_Insertions, a:count - 1, '')
@@ -66,7 +68,7 @@ function! PrevInsertComplete#Recall#Recall( count, register )
 	return 0
     endif
 
-    call s:Recall(l:what, a:count, a:register, l:multiplier)
+    call s:Recall(l:what, a:repeatCount, a:register, l:multiplier)
     return 1
 endfunction
 function! s:Recall( what, repeatCount, register, multiplier )
