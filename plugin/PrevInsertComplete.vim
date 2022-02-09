@@ -13,6 +13,8 @@ if exists('g:loaded_PrevInsertComplete') || (v:version < 700)
     finish
 endif
 let g:loaded_PrevInsertComplete = 1
+let s:save_cpo = &cpo
+set cpo&vim
 
 "- configuration ---------------------------------------------------------------
 
@@ -32,6 +34,14 @@ endif
 if ! exists('g:PrevInsertComplete_PersistRecalled')
     let g:PrevInsertComplete_PersistRecalled = 1
 endif
+
+
+"- internal data ---------------------------------------------------------------
+
+let g:PrevInsertComplete#Insertions = []
+let g:PrevInsertComplete#InsertionTimes = []
+let g:PrevInsertComplete#NamedInsertions = {}
+let g:PrevInsertComplete#RecalledInsertions = []
 
 
 "- autocmds --------------------------------------------------------------------
@@ -61,19 +71,29 @@ if ! hasmapto('<Plug>(PrevInsertComplete)', 'i')
     imap <C-x><C-a> <Plug>(PrevInsertComplete)
 endif
 
-nnoremap <silent> <Plug>(PrevInsertRecall) :<C-u>call setline('.', getline('.'))<Bar>if ! PrevInsertComplete#Recall#Recall(v:count1, v:count, v:register)<Bar>echoerr ingo#err#Get()<Bar>endif<CR>
+
+call ingo#plugin#historyrecall#Register('insertion',
+\   g:PrevInsertComplete#Insertions, g:PrevInsertComplete#NamedInsertions, g:PrevInsertComplete#RecalledInsertions,
+\   function('PrevInsertComplete#Recall#Do')
+\)
+
+nnoremap <silent> <Plug>(PrevInsertRecall)
+\ :<C-u>call setline('.', getline('.'))<Bar>
+\if ! ingo#plugin#historyrecall#Recall('insertion', v:count1, v:count, v:register)<Bar>echoerr ingo#err#Get()<Bar>endif<CR>
 if ! hasmapto('<Plug>(PrevInsertRecall)', 'n')
     nmap q<A-a> <Plug>(PrevInsertRecall)
 endif
 nnoremap <silent> <Plug>(PrevInsertList)
 \ :<C-u>if !&ma<Bar><Bar>&ro<Bar>call setline('.', getline('.'))<Bar>endif<Bar>
-\if ! PrevInsertComplete#Recall#List(v:count1, v:register)<Bar>echoerr ingo#err#Get()<Bar>endif<CR>
+\if ! ingo#plugin#historyrecall#List('insertion', v:count1, v:register)<Bar>echoerr ingo#err#Get()<Bar>endif<CR>
 if ! hasmapto('<Plug>(PrevInsertList)', 'n')
     nmap q<C-a> <Plug>(PrevInsertList)
 endif
 
 nnoremap <silent> <Plug>(PrevInsertRecallRepeat)
 \ :<C-u>if !&ma<Bar><Bar>&ro<Bar>call setline('.', getline('.'))<Bar>endif<Bar>
-\if ! PrevInsertComplete#Recall#RecallRepeat(v:count1, v:count, v:register)<Bar>echoerr ingo#err#Get()<Bar>endif<CR>
+\if ! ingo#plugin#historyrecall#RecallRepeat('insertion', v:count1, v:count, v:register)<Bar>echoerr ingo#err#Get()<Bar>endif<CR>
 
+let &cpo = s:save_cpo
+unlet s:save_cpo
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :

@@ -10,10 +10,16 @@
 
 function! PrevInsertComplete#Persist#Load()
     try
-	let g:PrevInsertComplete#Insertions = ingo#plugin#persistence#Load('PREV_INSERTIONS')
-	let g:PrevInsertComplete#InsertionTimes = ingo#plugin#persistence#Load('PREV_INSERTION_TIMES', repeat([0], len(g:PrevInsertComplete#Insertions)))   " Just ignore the insertion dates when they are corrupted.
-	let g:PrevInsertComplete#Recall#NamedInsertions = ingo#plugin#persistence#Load('PREV_NAMED_INSERTIONS')
-	let g:PrevInsertComplete#Recall#RecalledInsertions = ingo#plugin#persistence#Load('PREV_RECALLED_INSERTIONS')
+	" Note: Because the storage variables are passed by-reference to the
+	" ingo/plugin/historyrecall module, they cannot be re-assigned. Instead,
+	" use extend() to add to the existing, pre-initialized List / Dict. We
+	" do not need to clear previous values as
+	" PrevInsertComplete#Persist#Load() is invoked only once at startup,
+	" where the variables are all empty.
+	call extend(g:PrevInsertComplete#Insertions, ingo#plugin#persistence#Load('PREV_INSERTIONS'))
+	call extend(g:PrevInsertComplete#InsertionTimes, ingo#plugin#persistence#Load('PREV_INSERTION_TIMES', repeat([0], len(g:PrevInsertComplete#Insertions))))   " Just ignore the insertion dates when they are corrupted.
+	call extend(g:PrevInsertComplete#NamedInsertions, ingo#plugin#persistence#Load('PREV_NAMED_INSERTIONS'))
+	call extend(g:PrevInsertComplete#RecalledInsertions, ingo#plugin#persistence#Load('PREV_RECALLED_INSERTIONS'))
     catch /^Load:/
 	call ingo#msg#CustomExceptionMsg('Load')
     finally
@@ -32,11 +38,11 @@ function! PrevInsertComplete#Persist#Save()
     call ingo#plugin#persistence#Store('PREV_INSERTION_TIMES', g:PrevInsertComplete#InsertionTimes[(-1 * l:size):-1])
 
     if g:PrevInsertComplete_PersistNamed
-	call ingo#plugin#persistence#Store('PREV_NAMED_INSERTIONS', g:PrevInsertComplete#Recall#NamedInsertions)
+	call ingo#plugin#persistence#Store('PREV_NAMED_INSERTIONS', g:PrevInsertComplete#NamedInsertions)
     endif
 
     if g:PrevInsertComplete_PersistRecalled
-	call ingo#plugin#persistence#Store('PREV_RECALLED_INSERTIONS', g:PrevInsertComplete#Recall#RecalledInsertions)
+	call ingo#plugin#persistence#Store('PREV_RECALLED_INSERTIONS', g:PrevInsertComplete#RecalledInsertions)
     endif
 endfunction
 

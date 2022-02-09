@@ -11,13 +11,6 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-if ! exists('g:PrevInsertComplete#Insertions')
-    let g:PrevInsertComplete#Insertions = []
-endif
-if ! exists('g:PrevInsertComplete#InsertionTimes')
-    let g:PrevInsertComplete#InsertionTimes = []
-endif
-
 function! s:ComputeReltime( matchObj )
     let a:matchObj.menu = (a:matchObj.menu <= 0 ?
     \	'' :
