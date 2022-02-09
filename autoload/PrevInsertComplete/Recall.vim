@@ -11,8 +11,12 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:namedInsertions = {}
-let s:recalledInsertions = []
+if ! exists('g:PrevInsertComplete#Recall#NamedInsertions')
+    let g:PrevInsertComplete#Recall#NamedInsertions = {}
+endif
+if ! exists('g:PrevInsertComplete#Recall#RecalledInsertions')
+    let g:PrevInsertComplete#Recall#RecalledInsertions = []
+endif
 let s:recalledWhat = ''
 
 function! s:HasName( register ) abort
@@ -53,20 +57,20 @@ function! PrevInsertComplete#Recall#Recall( count, repeatCount, register )
 	let l:what = (a:count - 1) . "\n" . s:insertion
     elseif a:register =~# '[1-9]'
 	let l:index = str2nr(a:register) - 1
-	if len(s:recalledInsertions) == 0
+	if len(g:PrevInsertComplete#Recall#RecalledInsertions) == 0
 	    call ingo#err#Set('No recalled insertions yet')
 	    return 0
-	elseif len(s:recalledInsertions) <= l:index
+	elseif len(g:PrevInsertComplete#Recall#RecalledInsertions) <= l:index
 	    call ingo#err#Set(printf('There %s only %d recalled insertion%s',
-	    \   len(s:recalledInsertions) == 1 ? 'is' : 'are',
-	    \   len(s:recalledInsertions),
-	    \   len(s:recalledInsertions) == 1 ? '' : 's'
+	    \   len(g:PrevInsertComplete#Recall#RecalledInsertions) == 1 ? 'is' : 'are',
+	    \   len(g:PrevInsertComplete#Recall#RecalledInsertions),
+	    \   len(g:PrevInsertComplete#Recall#RecalledInsertions) == 1 ? '' : 's'
 	    \))
 	    return 0
 	endif
 
 	let l:multiplier = a:count
-	let s:insertion = s:recalledInsertions[l:index]
+	let s:insertion = g:PrevInsertComplete#Recall#RecalledInsertions[l:index]
 	let l:what = '"' . a:register . "\n" . s:insertion
 	if a:register ==# '1'
 	    " Put any recalled insertion other that the last recall itself back
@@ -77,9 +81,9 @@ function! PrevInsertComplete#Recall#Recall( count, repeatCount, register )
 	    " 3-2-1-3-2-1-...
 	    let s:recalledWhat = ''
 	endif
-    elseif has_key(s:namedInsertions, a:register)
+    elseif has_key(g:PrevInsertComplete#Recall#NamedInsertions, a:register)
 	let l:multiplier = a:count
-	let s:insertion = s:namedInsertions[a:register]
+	let s:insertion = g:PrevInsertComplete#Recall#NamedInsertions[a:register]
 	let l:what = '"' . a:register . "\n" . s:insertion
     else
 	call ingo#err#Set(a:register =~# '[a-zA-Z]' ?
@@ -96,9 +100,9 @@ function! s:Recall( what, repeatCount, register, multiplier )
     if ! empty(a:what) && a:what !=# s:recalledWhat
 	" It's not a repeat of the last recalled thing; put it at the first
 	" position of the recall stack.
-	call insert(s:recalledInsertions, s:insertion)
-	if len(s:recalledInsertions) > 9
-	    call remove(s:recalledInsertions, 9, -1)
+	call insert(g:PrevInsertComplete#Recall#RecalledInsertions, s:insertion)
+	if len(g:PrevInsertComplete#Recall#RecalledInsertions) > 9
+	    call remove(g:PrevInsertComplete#Recall#RecalledInsertions, 9, -1)
 	endif
 	let s:recalledWhat = a:what
     endif
@@ -116,9 +120,9 @@ endfunction
 function! PrevInsertComplete#Recall#List( multiplier, register )
     let l:validNames = filter(
     \   split('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', '\zs'),
-    \   'has_key(s:namedInsertions, v:val)'
+    \   'has_key(g:PrevInsertComplete#Recall#NamedInsertions, v:val)'
     \)
-    let l:recalledNum = len(s:recalledInsertions)
+    let l:recalledNum = len(g:PrevInsertComplete#Recall#RecalledInsertions)
 
     if len(g:PrevInsertComplete#Insertions) + len(l:validNames) + l:recalledNum == 0
 	call ingo#err#Set('No insertions yet')
@@ -130,10 +134,10 @@ function! PrevInsertComplete#Recall#List( multiplier, register )
     echo ' #  insertion'
     echohl None
     for l:i in range(1, l:recalledNum)
-	echo '"' . l:i . '  ' . ingo#avoidprompt#TranslateLineBreaks(s:recalledInsertions[l:i - 1])
+	echo '"' . l:i . '  ' . ingo#avoidprompt#TranslateLineBreaks(g:PrevInsertComplete#Recall#RecalledInsertions[l:i - 1])
     endfor
     for l:i in l:validNames
-	echo '"' . l:i . '  ' . ingo#avoidprompt#TranslateLineBreaks(s:namedInsertions[l:i])
+	echo '"' . l:i . '  ' . ingo#avoidprompt#TranslateLineBreaks(g:PrevInsertComplete#Recall#NamedInsertions[l:i])
     endfor
     for l:i in range(min([9, len(g:PrevInsertComplete#Insertions)]), 1, -1)
 	echo ' ' . l:i . '  ' . ingo#avoidprompt#TranslateLineBreaks(g:PrevInsertComplete#Insertions[l:i - 1])
@@ -151,7 +155,7 @@ function! PrevInsertComplete#Recall#List( multiplier, register )
 	if empty(l:choice) || l:choice ==# "\<CR>"
 	    return 1
 	elseif l:choice =~# '\d'
-	    let s:insertion = s:recalledInsertions[str2nr(l:choice) - 1]
+	    let s:insertion = g:PrevInsertComplete#Recall#RecalledInsertions[str2nr(l:choice) - 1]
 	    let l:repeatCount = str2nr(l:choice)    " Counting last insertions here.
 	    let l:repeatRegister = l:choice
 	    if l:choice !=# '1'
@@ -160,7 +164,7 @@ function! PrevInsertComplete#Recall#List( multiplier, register )
 		let l:what = '"' . l:choice . "\n" . s:insertion
 	    endif
 	elseif l:choice =~# '\a'
-	    let s:insertion = s:namedInsertions[l:choice]
+	    let s:insertion = g:PrevInsertComplete#Recall#NamedInsertions[l:choice]
 	    let l:repeatRegister = l:choice
 	    " Don't put the same name and identical contents at the top again if
 	    " it's already there.
@@ -181,7 +185,7 @@ function! PrevInsertComplete#Recall#List( multiplier, register )
 	let l:what = l:choice . "\n" . s:insertion
     elseif l:choice =~# '\a'  | " Take {a-zA-Z} as a shortcut for "{a-zA-z}; unlike with the {1-9} recalled insertions, there's no clash here.
 	let l:repeatRegister = l:choice
-	let s:insertion = s:namedInsertions[l:choice]
+	let s:insertion = g:PrevInsertComplete#Recall#NamedInsertions[l:choice]
 	" Don't put the same name and identical contents at the top again if
 	" it's already there.
 	let l:what = '"' . l:choice . "\n" . s:insertion
@@ -190,7 +194,7 @@ function! PrevInsertComplete#Recall#List( multiplier, register )
     endif
 
     if l:hasName
-	let s:namedInsertions[a:register] = s:insertion
+	let g:PrevInsertComplete#Recall#NamedInsertions[a:register] = s:insertion
     endif
 
     call s:Recall(l:what, l:repeatCount, l:repeatRegister, a:multiplier)

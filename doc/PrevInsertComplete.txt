@@ -103,7 +103,12 @@ By default, all recorded insertions are persisted. You can reduce the maximum
 number of insertions to be stored via: >
     let g:PrevInsertComplete_PersistSize = 10
 or completely turn off persistence by setting the variable to 0.
-
+    *g:PrevInsertComplete_PersistNamed* *g:PrevInsertComplete_PersistRecalled*
+By default, the named ({a-zA-Z}) and recalled ({1-9}) insertions are
+persisted, too. To disable that: >
+    let g:PrevInsertComplete_PersistNamed = 0
+    let g:PrevInsertComplete_PersistRecalled = 0
+<
 						    *PrevInsertComplete-remap*
 If you want to use different mappings, map your keys to the
 <Plug>(PrevInsert...) mapping targets _before_ sourcing the script (e.g. in

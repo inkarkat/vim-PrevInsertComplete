@@ -26,6 +26,12 @@ endif
 if ! exists('g:PrevInsertComplete_PersistSize')
     let g:PrevInsertComplete_PersistSize = g:PrevInsertComplete_HistorySize
 endif
+if ! exists('g:PrevInsertComplete_PersistNamed')
+    let g:PrevInsertComplete_PersistNamed = 1
+endif
+if ! exists('g:PrevInsertComplete_PersistRecalled')
+    let g:PrevInsertComplete_PersistRecalled = 1
+endif
 
 
 "- autocmds --------------------------------------------------------------------
@@ -34,7 +40,7 @@ augroup PrevInsertComplete
     autocmd!
     autocmd InsertLeave * call PrevInsertComplete#Record#Do()
 
-    if g:PrevInsertComplete_PersistSize > 0
+    if g:PrevInsertComplete_PersistSize > 0 || g:PrevInsertComplete_PersistNamed || g:PrevInsertComplete_PersistRecalled
 	" As the viminfo is only processed after sourcing of the runtime files, the
 	" persistent global variables are not yet available here. Defer this until Vim
 	" startup has completed.
