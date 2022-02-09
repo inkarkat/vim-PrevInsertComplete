@@ -169,6 +169,11 @@ function! PrevInsertComplete#Recall#List( multiplier, register )
 	    throw 'ASSERT: Unexpected l:choice: ' . l:choice
 	endif
     elseif l:choice =~# '\d'
+	if ! l:hasName
+	    " Use the index for repeating the recall, unless this is being
+	    " assigned a name; then, the count specifies the multiplier.
+	    let l:repeatCount = str2nr(l:choice)
+	endif
 	let l:repeatRegister = a:register   " Use the named register this is being assigned to, or the default register.
 	let s:insertion = g:PrevInsertComplete_Insertions[str2nr(l:choice) - 1]
 	" Don't put the same count and identical contents at the top again if
