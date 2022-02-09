@@ -19,11 +19,20 @@ function! s:HasName( register ) abort
     return (a:register !=# ingo#register#Default())
 endfunction
 function! PrevInsertComplete#Recall#RecallRepeat( count, repeatCount, register )
-    " Reset the count if the actual register differs from the original register,
-    " as count may be the last insertion number or the multiplier.
-    let [l:count, l:repeatCount] = (g:repeat_reg[1] ==# a:register ? [a:count, a:repeatCount] : [1, 0])
+    let l:isOverriddenCount = (a:repeatCount > 0 && a:repeatCount != g:repeat_count)
+    let l:isOverriddenRegister = (g:repeat_reg[1] !=# a:register)
 
-    return PrevInsertComplete#Recall#Recall(l:count, l:repeatCount, a:register)
+    if l:isOverriddenRegister
+	" Reset the count if the actual register differs from the original
+	" register, as count may be the last insertion number or the multiplier.
+	return PrevInsertComplete#Recall#Recall(1, 0, a:register)
+    elseif l:isOverriddenCount
+	" An overriding count (without a register) selects the previous
+	" [count]'th insertion for repeat.
+	return PrevInsertComplete#Recall#Recall(a:count, a:repeatCount, ingo#register#Default())
+    else
+	return PrevInsertComplete#Recall#Recall(a:count, a:repeatCount, a:register)
+    endif
 endfunction
 function! PrevInsertComplete#Recall#Recall( count, repeatCount, register )
     if ! s:HasName(a:register)
