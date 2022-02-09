@@ -11,6 +11,9 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+let g:PrevInsertComplete#Insertions = []
+let g:PrevInsertComplete#InsertionTimes = []
+
 function! s:ComputeReltime( matchObj )
     let a:matchObj.menu = (a:matchObj.menu <= 0 ?
     \	'' :
@@ -24,7 +27,7 @@ function! PrevInsertComplete#FindMatches( pattern )
     return
     \	map(
     \	    filter(
-    \		map(copy(g:PrevInsertComplete_Insertions), '{"word": v:val, "menu": g:PrevInsertComplete_InsertionTimes[v:key]}'),
+    \		map(copy(g:PrevInsertComplete#Insertions), '{"word": v:val, "menu": g:PrevInsertComplete#InsertionTimes[v:key]}'),
     \		'v:val.word =~ a:pattern'
     \	    ),
     \	    'CompleteHelper#Abbreviate#Word(s:ComputeReltime(v:val))'
@@ -35,7 +38,7 @@ function! PrevInsertComplete#FindMatches( pattern )
     " Use default comparison operator here to honor the 'ignorecase' setting.
     return
     \	map(
-    \	    filter(copy(g:PrevInsertComplete_Insertions), 'v:val =~ a:pattern'),
+    \	    filter(copy(g:PrevInsertComplete#Insertions), 'v:val =~ a:pattern'),
     \	    'CompleteHelper#Abbreviate#Word({"word": v:val})'
     \	)
 endfunction
@@ -46,13 +49,13 @@ function! PrevInsertComplete#PrevInsertComplete( findstart, base )
 	if a:findstart
 	    return col('.') - 1
 	else
-	    let l:histIdx = index(g:PrevInsertComplete_Insertions, s:addedText)
+	    let l:histIdx = index(g:PrevInsertComplete#Insertions, s:addedText)
 "****D echomsg '***1' l:histIdx s:addedText
 	    if l:histIdx == -1 || l:histIdx == 0
 		return []
 	    endif
-"****D echomsg '***2' get(g:PrevInsertComplete_Insertions, (l:histIdx - 1), '')
-	    return [{'word': get(g:PrevInsertComplete_Insertions, (l:histIdx - 1), '')}]
+"****D echomsg '***2' get(g:PrevInsertComplete#Insertions, (l:histIdx - 1), '')
+	    return [{'word': get(g:PrevInsertComplete#Insertions, (l:histIdx - 1), '')}]
 	endif
     endif
 

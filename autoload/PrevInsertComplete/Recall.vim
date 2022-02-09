@@ -36,20 +36,20 @@ function! PrevInsertComplete#Recall#RecallRepeat( count, repeatCount, register )
 endfunction
 function! PrevInsertComplete#Recall#Recall( count, repeatCount, register )
     if ! s:HasName(a:register)
-	if len(g:PrevInsertComplete_Insertions) == 0
+	if len(g:PrevInsertComplete#Insertions) == 0
 	    call ingo#err#Set('No insertions yet')
 	    return 0
-	elseif len(g:PrevInsertComplete_Insertions) < a:count
+	elseif len(g:PrevInsertComplete#Insertions) < a:count
 	    call ingo#err#Set(printf('There %s only %d insertion%s in the history',
-	    \   len(g:PrevInsertComplete_Insertions) == 1 ? 'is' : 'are',
-	    \   len(g:PrevInsertComplete_Insertions),
-	    \   len(g:PrevInsertComplete_Insertions) == 1 ? '' : 's'
+	    \   len(g:PrevInsertComplete#Insertions) == 1 ? 'is' : 'are',
+	    \   len(g:PrevInsertComplete#Insertions),
+	    \   len(g:PrevInsertComplete#Insertions) == 1 ? '' : 's'
 	    \))
 	    return 0
 	endif
 
 	let l:multiplier = 1
-	let s:insertion = g:PrevInsertComplete_Insertions[a:count - 1]
+	let s:insertion = g:PrevInsertComplete#Insertions[a:count - 1]
 	let l:what = (a:count - 1) . "\n" . s:insertion
     elseif a:register =~# '[1-9]'
 	let l:index = str2nr(a:register) - 1
@@ -120,7 +120,7 @@ function! PrevInsertComplete#Recall#List( multiplier, register )
     \)
     let l:recalledNum = len(s:recalledInsertions)
 
-    if len(g:PrevInsertComplete_Insertions) + len(l:validNames) + l:recalledNum == 0
+    if len(g:PrevInsertComplete#Insertions) + len(l:validNames) + l:recalledNum == 0
 	call ingo#err#Set('No insertions yet')
 	return 0
     endif
@@ -135,8 +135,8 @@ function! PrevInsertComplete#Recall#List( multiplier, register )
     for l:i in l:validNames
 	echo '"' . l:i . '  ' . ingo#avoidprompt#TranslateLineBreaks(s:namedInsertions[l:i])
     endfor
-    for l:i in range(min([9, len(g:PrevInsertComplete_Insertions)]), 1, -1)
-	echo ' ' . l:i . '  ' . ingo#avoidprompt#TranslateLineBreaks(g:PrevInsertComplete_Insertions[l:i - 1])
+    for l:i in range(min([9, len(g:PrevInsertComplete#Insertions)]), 1, -1)
+	echo ' ' . l:i . '  ' . ingo#avoidprompt#TranslateLineBreaks(g:PrevInsertComplete#Insertions[l:i - 1])
     endfor
 
     let l:validNamesAndRecalls = join(l:validNames, '') . join(range(1, l:recalledNum), '')
@@ -175,7 +175,7 @@ function! PrevInsertComplete#Recall#List( multiplier, register )
 	    let l:repeatCount = str2nr(l:choice)
 	endif
 	let l:repeatRegister = a:register   " Use the named register this is being assigned to, or the default register.
-	let s:insertion = g:PrevInsertComplete_Insertions[str2nr(l:choice) - 1]
+	let s:insertion = g:PrevInsertComplete#Insertions[str2nr(l:choice) - 1]
 	" Don't put the same count and identical contents at the top again if
 	" it's already there.
 	let l:what = l:choice . "\n" . s:insertion

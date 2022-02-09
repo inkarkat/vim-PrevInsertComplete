@@ -28,12 +28,6 @@ if ! exists('g:PrevInsertComplete_PersistSize')
 endif
 
 
-"- internal data structures ----------------------------------------------------
-
-let g:PrevInsertComplete_Insertions = []
-let g:PrevInsertComplete_InsertionTimes = []
-
-
 "- autocmds --------------------------------------------------------------------
 
 augroup PrevInsertComplete
