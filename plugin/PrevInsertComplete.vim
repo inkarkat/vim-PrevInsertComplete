@@ -74,7 +74,8 @@ endif
 
 call ingo#plugin#historyrecall#Register('insertion',
 \   g:PrevInsertComplete#Insertions, g:PrevInsertComplete#NamedInsertions, g:PrevInsertComplete#RecalledInsertions,
-\   function('PrevInsertComplete#Recall#Do')
+\   function('PrevInsertComplete#Recall#Do'),
+\   {'isUniqueRecalls': 0}
 \)
 
 nnoremap <silent> <Plug>(PrevInsertRecall)
