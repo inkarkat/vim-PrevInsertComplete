@@ -16,10 +16,10 @@ function! PrevInsertComplete#Persist#Load()
 	" do not need to clear previous values as
 	" PrevInsertComplete#Persist#Load() is invoked only once at startup,
 	" where the variables are all empty.
-	call extend(g:PrevInsertComplete#Insertions, ingo#plugin#persistence#Load('PREV_INSERTIONS'))
+	call extend(g:PrevInsertComplete#Insertions, ingo#plugin#persistence#Load('PREV_INSERTIONS', []))
 	call extend(g:PrevInsertComplete#InsertionTimes, ingo#plugin#persistence#Load('PREV_INSERTION_TIMES', repeat([0], len(g:PrevInsertComplete#Insertions))))   " Just ignore the insertion dates when they are corrupted.
-	call extend(g:PrevInsertComplete#NamedInsertions, ingo#plugin#persistence#Load('PREV_NAMED_INSERTIONS'))
-	call extend(g:PrevInsertComplete#RecalledInsertions, ingo#plugin#persistence#Load('PREV_RECALLED_INSERTIONS'))
+	call extend(g:PrevInsertComplete#NamedInsertions, ingo#plugin#persistence#Load('PREV_NAMED_INSERTIONS', {}))
+	call extend(g:PrevInsertComplete#RecalledInsertions, ingo#plugin#persistence#Load('PREV_RECALLED_INSERTIONS', []))
     catch /^Load:/
 	call ingo#msg#CustomExceptionMsg('Load')
     finally
