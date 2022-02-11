@@ -35,6 +35,10 @@ if ! exists('g:PrevInsertComplete_PersistRecalled')
     let g:PrevInsertComplete_PersistRecalled = 1
 endif
 
+if ! exists('g:PrevInsertComplete_RecallInsertStrategy')
+    let g:PrevInsertComplete_RecallInsertStrategy = 'insert1'
+endif
+
 
 "- internal data ---------------------------------------------------------------
 

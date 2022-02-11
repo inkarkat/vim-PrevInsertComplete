@@ -111,6 +111,11 @@ persisted, too. To disable that:
     let g:PrevInsertComplete_PersistNamed = 0
     let g:PrevInsertComplete_PersistRecalled = 0
 
+Insertions are by default inserted at the beginning of the line if the cursor
+is in column 1, else appended after the current character. You can change that
+behavior via one of the values described at g:IngoLibrary\_InsertHereStrategy
+put into g:PrevInsertComplete\_RecallInsertStrategy.
+
 If you want to use different mappings, map your keys to the
 &lt;Plug&gt;(PrevInsert...) mapping targets _before_ sourcing the script (e.g. in
 your vimrc):
@@ -136,6 +141,8 @@ HISTORY
 - ENH: Allow naming of (important) insertions similar to the built-in
   registers, and offer a shortlist of the last 9 recalls, too - previous
   recalls likely get recalled again.
+- CHG: Insert recalled insertion before the cursor when on the first column,
+  and allow to tweak that via g:PrevInsertComplete\_RecallInsertStrategy.
 
 __You need to update to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.044!__
 

@@ -19,7 +19,8 @@ function! PrevInsertComplete#Recall#Do( insertion, repeatCount, register, multip
 endfunction
 function! PrevInsertComplete#Recall#Insert( insertion, multiplier )
     call setreg('"', a:insertion, 'v')
-    execute 'normal!' a:multiplier . 'p'
+    let l:pasteCommand = (ingo#text#IsInsert(g:PrevInsertComplete_RecallInsertStrategy) ? 'P' : 'p')
+    execute 'normal!' a:multiplier . l:pasteCommand
 endfunction
 
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
