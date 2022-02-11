@@ -20,8 +20,12 @@ souped up with history and selection.
 
 In insert mode, you can narrow down the candidates by typing a keyword first;
 then, only insertions with a match will be offered as completion candidates.
-In normal mode, you can directly recall the [count]'th previous insertion, or
-have it list the last 9 insertions and let you choose.
+
+In normal mode, there's a direct mapping that lets you recall the [N]'th
+previous insertion, one of the last recalls via "{1-9}, or a named insertion
+via "{a-zA-Z}. Alternatively, another mapping shows a list of the last 9
+insertions, recalled and named ones, and interactively queries one.
+
 To avoid that the many minor tactical edits clobber up the history, only
 significant (longer) edits are recalled.
 
@@ -40,7 +44,7 @@ CTRL-X CTRL-A		Find previous insertions (|i_CTRL-A|, |quote.|) whose
 			Further use of CTRL-X CTRL-A will append insertions done
 			after the previous recall.
 								     *q_ALT-A*
-[count]q<ALT-A>		Recall and append previous [count]'th insertion.
+[N]q<ALT-A>		Recall and append previous [N]'th insertion.
 [count]"{1-9}q<ALT-A>	Recall and append the insertion that was recalled last
 			(1), second-to-last (2), etc. [count] times.
 [count]"{a-zA-Z}q<ALT-A>
@@ -139,6 +143,9 @@ HISTORY						  *PrevInsertComplete-history*
 - CHG: q<C-@> direct recall mapping is broken in GVIM 8.2 (cp.
   https://github.com/vim/vim/issues/6457#issuecomment-658960270); choose
   different q<A-a> default to avoid these issues.
+- ENH: Allow naming of (important) insertions similar to the built-in
+  registers, and offer a shortlist of the last 9 recalls, too - previous
+  recalls likely get recalled again.
   *** You need to update to ingo-library (vimscript #4433) version 1.044! ***
 
 1.12	28-Dec-2020
