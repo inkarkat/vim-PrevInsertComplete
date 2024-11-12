@@ -1,5 +1,6 @@
 autoload/PrevInsertComplete.vim
 autoload/PrevInsertComplete/Persist.vim
+autoload/PrevInsertComplete/Recall.vim
 autoload/PrevInsertComplete/Record.vim
 plugin/PrevInsertComplete.vim
 doc/PrevInsertComplete.txt

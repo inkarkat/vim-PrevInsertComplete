@@ -3,7 +3,7 @@
 " DEPENDENCIES:
 "   - ingo-library.vim plugin
 "
-" Copyright: (C) 2011-2020 Ingo Karkat
+" Copyright: (C) 2011-2022 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
@@ -23,18 +23,18 @@ function! PrevInsertComplete#Record#Insertion( text )
 	return
     endif
 
-    let l:histIdx = index(g:PrevInsertComplete_Insertions, a:text)
+    let l:histIdx = index(g:PrevInsertComplete#Insertions, a:text)
     if l:histIdx == -1
-	call insert(g:PrevInsertComplete_Insertions, a:text, 0)
-	call insert(g:PrevInsertComplete_InsertionTimes, localtime(), 0)
-	silent! call remove(g:PrevInsertComplete_Insertions, g:PrevInsertComplete_HistorySize, -1)
+	call insert(g:PrevInsertComplete#Insertions, a:text, 0)
+	call insert(g:PrevInsertComplete#InsertionTimes, localtime(), 0)
+	silent! call remove(g:PrevInsertComplete#Insertions, g:PrevInsertComplete_HistorySize, -1)
     else
 	" Like in the Vim histories, the same history item replaces the previous
 	" ones and is put at the top.
-	call remove(g:PrevInsertComplete_Insertions, l:histIdx)
-	call remove(g:PrevInsertComplete_InsertionTimes, l:histIdx)
-	call insert(g:PrevInsertComplete_Insertions, a:text, 0)
-	call insert(g:PrevInsertComplete_InsertionTimes, localtime(), 0)
+	call remove(g:PrevInsertComplete#Insertions, l:histIdx)
+	call remove(g:PrevInsertComplete#InsertionTimes, l:histIdx)
+	call insert(g:PrevInsertComplete#Insertions, a:text, 0)
+	call insert(g:PrevInsertComplete#InsertionTimes, localtime(), 0)
     endif
 endfunction
 function! PrevInsertComplete#Record#Do()

@@ -3,51 +3,47 @@
 " DEPENDENCIES:
 "   - ingo-library.vim plugin
 "
-" Copyright: (C) 2012-2020 Ingo Karkat
+" Copyright: (C) 2012-2022 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 
 function! PrevInsertComplete#Persist#Load()
-    if exists('g:PREV_INSERTIONS')
-	try
-	    " Persistent global variables cannot be of type List, so we actually
-	    " store the string representation, and eval() it back to a List.
-	    execute 'let g:PrevInsertComplete_Insertions =' g:PREV_INSERTIONS
-	catch /^Vim\%((\a\+)\)\=:/
-	    call ingo#msg#ErrorMsg('Corrupted persistent insertion history in g:PREV_INSERTIONS')
-	    unlet! g:PREV_INSERTIONS
-	    unlet! g:PREV_INSERTION_TIMES
-
-	    return
-	endtry
-
-	if exists('g:PREV_INSERTION_TIMES')
-	    try
-		execute 'let g:PrevInsertComplete_InsertionTimes =' g:PREV_INSERTION_TIMES
-	    catch /^Vim\%((\a\+)\)\=:/
-		" Just ignore the insertion dates when they are corrupted.
-		let g:PrevInsertComplete_InsertionTimes = repeat([0], len(g:PrevInsertComplete_Insertions))
-	    endtry
-	else
-	    " Somehow, the insertion dates weren't persisted. So what.
-	    let g:PrevInsertComplete_InsertionTimes = repeat([0], len(g:PrevInsertComplete_Insertions))
-	endif
-
+    try
+	" Note: Because the storage variables are passed by-reference to the
+	" ingo/plugin/historyrecall module, they cannot be re-assigned. Instead,
+	" use extend() to add to the existing, pre-initialized List / Dict. We
+	" do not need to clear previous values as
+	" PrevInsertComplete#Persist#Load() is invoked only once at startup,
+	" where the variables are all empty.
+	call extend(g:PrevInsertComplete#Insertions, ingo#plugin#persistence#Load('PREV_INSERTIONS', []))
+	call extend(g:PrevInsertComplete#InsertionTimes, ingo#plugin#persistence#Load('PREV_INSERTION_TIMES', repeat([0], len(g:PrevInsertComplete#Insertions))))   " Just ignore the insertion dates when they are corrupted.
+	call extend(g:PrevInsertComplete#NamedInsertions, ingo#plugin#persistence#Load('PREV_NAMED_INSERTIONS', {}))
+	call extend(g:PrevInsertComplete#RecalledInsertions, ingo#plugin#persistence#Load('PREV_RECALLED_INSERTIONS', []))
+    catch /^Load:/
+	call ingo#msg#CustomExceptionMsg('Load')
+    finally
 	" Free the memory occupied by the persistence variables. They will be
 	" re-populated by PrevInsertComplete#Persist#Save() before Vim exits.
-	unlet! g:PREV_INSERTIONS
-	unlet! g:PREV_INSERTION_TIMES
-    endif
+	unlet! g:PREV_INSERTIONS g:PREV_INSERTION_TIMES g:PREV_NAMED_INSERTIONS g:PREV_RECALLED_INSERTIONS
+    endtry
 endfunction
 
 function! PrevInsertComplete#Persist#Save()
-    let l:size = len(g:PrevInsertComplete_Insertions)
+    let l:size = len(g:PrevInsertComplete#Insertions)
     " Need to truncate to actual size for the List slicing from behind.
     let l:size = (l:size < g:PrevInsertComplete_PersistSize ? l:size : g:PrevInsertComplete_PersistSize)
 
-    let g:PREV_INSERTIONS      = string(g:PrevInsertComplete_Insertions[(-1 * l:size):-1])
-    let g:PREV_INSERTION_TIMES = string(g:PrevInsertComplete_InsertionTimes[(-1 * l:size):-1])
+    call ingo#plugin#persistence#Store('PREV_INSERTIONS', g:PrevInsertComplete#Insertions[(-1 * l:size):-1])
+    call ingo#plugin#persistence#Store('PREV_INSERTION_TIMES', g:PrevInsertComplete#InsertionTimes[(-1 * l:size):-1])
+
+    if g:PrevInsertComplete_PersistNamed
+	call ingo#plugin#persistence#Store('PREV_NAMED_INSERTIONS', g:PrevInsertComplete#NamedInsertions)
+    endif
+
+    if g:PrevInsertComplete_PersistRecalled
+	call ingo#plugin#persistence#Store('PREV_RECALLED_INSERTIONS', g:PrevInsertComplete#RecalledInsertions)
+    endif
 endfunction
 
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
