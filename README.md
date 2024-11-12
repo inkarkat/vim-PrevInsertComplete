@@ -134,7 +134,7 @@ below).
 HISTORY
 ------------------------------------------------------------------------------
 
-##### 2.00    RELEASEME
+##### 2.00    12-Nov-2024
 - CHG: q&lt;C-@&gt; direct recall mapping is broken in GVIM 8.2 (cp.
   https://github.com/vim/vim/issues/6457#issuecomment-658960270); choose
   different q&lt;A-a&gt; default to avoid these issues.
@@ -175,7 +175,7 @@ configuration.
 - Started development.
 
 ------------------------------------------------------------------------------
-Copyright: (C) 2011-2022 Ingo Karkat -
+Copyright: (C) 2011-2024 Ingo Karkat -
 The [VIM LICENSE](http://vimdoc.sourceforge.net/htmldoc/uganda.html#license) applies to this plugin.
 
 Maintainer:     Ingo Karkat &lt;ingo@karkat.de&gt;
